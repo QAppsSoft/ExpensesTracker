@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Api.Models;
-using AwesomeAssertions;
 
 namespace ApiFixtures;
 
