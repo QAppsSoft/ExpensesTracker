@@ -1,6 +1,36 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
-  ]
+    "config:best-practices"
+  ],
+  "assignees": [
+    "alex6dj"
+  ],
+  "major": {
+    "dependencyDashboardApproval": true
+  },
+  "lockFileMaintenance": {
+    "automerge": true
+  },
+  "minor": {
+    "automerge": true
+  },
+  "patch": {
+    "automerge": true
+  },
+  "pin": {
+    "automerge": true
+  },
+  "automergeType": "pr",
+  "packageRules": [
+    {
+      "groupName": "Avalonia packages",
+      "matchPackageNames": [
+        "Avalonia{/,}**", "FluentAvaloniaUI"
+      ]
+    }
+  ],
+  "timezone": "America/Montevideo",
+  "description": "Schedule daily before 4 AM",
+  "schedule": ["* 0-3 * * *"]
 }
