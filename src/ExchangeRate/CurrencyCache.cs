@@ -15,15 +15,17 @@ public class CurrencyCache
             throw new ArgumentNullException(nameof(cachePath));
         }
 
-        if (!Directory.Exists(Path.GetDirectoryName(_cachePath)))
+        var directoryName = Path.GetDirectoryName(_cachePath);
+        if (!Directory.Exists(directoryName))
         {
-            Directory.CreateDirectory(_cachePath);
+            Directory.CreateDirectory(directoryName);
         }
 
         if (!File.Exists(_cachePath))
         {
             var serializedConversionData = JsonSerializer.Serialize(ConversionCacheDTO.Default);
             File.WriteAllText(cachePath, serializedConversionData);
+            _cachedConversionData = ConversionCacheDTO.Default;
         }
         else
         {
