@@ -5,6 +5,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{755D17A0-3DFF-464A-AE1F-7E7CF1EB262A}"
 	ProjectSection(SolutionItems) = preProject
 		compose.yaml = compose.yaml
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\Api\Api.csproj", "{9B72C016-F690-4D3D-A377-55F6A634BFB5}"
