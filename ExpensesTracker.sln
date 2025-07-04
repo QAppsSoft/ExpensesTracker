@@ -1,8 +1,35 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{976B69E4-BD41-479B-8281-7B832B4CF74C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{755D17A0-3DFF-464A-AE1F-7E7CF1EB262A}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\Api\Api.csproj", "{9B72C016-F690-4D3D-A377-55F6A634BFB5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F6575AE4-0B4F-453E-B6B1-896E141EC582}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiFixtures", "tests\ApiFixtures\ApiFixtures.csproj", "{F3162022-A3C2-40E7-91AB-26DBC70A737B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9B72C016-F690-4D3D-A377-55F6A634BFB5} = {976B69E4-BD41-479B-8281-7B832B4CF74C}
+		{F3162022-A3C2-40E7-91AB-26DBC70A737B} = {F6575AE4-0B4F-453E-B6B1-896E141EC582}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B72C016-F690-4D3D-A377-55F6A634BFB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B72C016-F690-4D3D-A377-55F6A634BFB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B72C016-F690-4D3D-A377-55F6A634BFB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B72C016-F690-4D3D-A377-55F6A634BFB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3162022-A3C2-40E7-91AB-26DBC70A737B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3162022-A3C2-40E7-91AB-26DBC70A737B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3162022-A3C2-40E7-91AB-26DBC70A737B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3162022-A3C2-40E7-91AB-26DBC70A737B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
