@@ -4,4 +4,12 @@
     <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AwesomeAssertions" />     
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="AwesomeAssertions"/>
+  </ItemGroup>
+  
 </Project>
