@@ -45,17 +45,13 @@ public class CurrencyCache
         Justification = "Applying the fixes will not create more readable code")]
     public void SaveToCacheData(IEnumerable<ConversionData> conversionDataList)
     {
-        foreach (var conversionData in conversionDataList)
-        {
-            if (_cachedConversionData.ConversionData.Add(conversionData))
-            {
-                continue;
-            }
-            
-            _cachedConversionData.ConversionData.Remove(conversionData);
-            _cachedConversionData.ConversionData.Add(conversionData);
-        }
+        var oldConversionData = _cachedConversionData.ConversionData;
+        
+        var combinedSet = conversionDataList.ToHashSet();
+        combinedSet.UnionWith(oldConversionData);
 
+        _cachedConversionData = new ConversionCacheDTO(DateTime.Now, combinedSet);
+        
         SerializeAndSaveConversionData();
     }
 
