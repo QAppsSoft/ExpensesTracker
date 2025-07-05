@@ -7,6 +7,7 @@ public class CurrencyCache
 {
     private readonly string _cachePath;
     private ConversionCacheDTO _cachedConversionData;
+    public readonly TimeSpan CacheDuration = TimeSpan.FromHours(12);
 
     public CurrencyCache(string cachePath)
     {
@@ -67,9 +68,21 @@ public class CurrencyCache
         _cachedConversionData.ConversionData
             .FirstOrDefault(x => string.Equals(x.Key, conversionKey, StringComparison.Ordinal));
 
-    public void ResetCache()
+    public void ResetCache(bool onlyExpired = false)
     {
-        _cachedConversionData = ConversionCacheDTO.Default;
+        if (onlyExpired)
+        {
+            var expired = _cachedConversionData.ConversionData
+                .Where(d => d.UpdatedAt < DateTime.Now - CacheDuration);
+
+            _cachedConversionData = new ConversionCacheDTO(DateTime.Now,
+                _cachedConversionData.ConversionData.Except(expired).ToHashSet());
+        }
+        else
+        {
+            _cachedConversionData = ConversionCacheDTO.Default;
+        }
+        
         SerializeAndSaveConversionData();
     }
 

@@ -185,6 +185,30 @@ namespace ExchangeRateTests
             deserialized.LastUpdated.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
             deserialized.ConversionData.Should().BeEquivalentTo(new List<ConversionData>());
         }
+        
+        [Test]
+        public void ResetCache_WithOnlyExpiredSetTrue_ClearsOnlyExpiredCacheData()
+        {
+            var convData1 = new ConversionData("USD-EUR", 0.85f, DateTime.Now - TimeSpan.FromHours(13));
+            var convData2 = new ConversionData("EUR-GBP", 0.90f, DateTime.Now - TimeSpan.FromHours(11));
+            
+            // Arrange
+            var testData = new List<ConversionData> { convData1, convData2 };
+            _currencyCache.SaveToCacheData(testData);
+
+            // Act
+            _currencyCache.ResetCache(true);
+
+            // Assert
+            _currencyCache.GetCachedConversionData("USD-EUR").Should().BeNull();
+            _currencyCache.GetCachedConversionData("EUR-GBP").Should().NotBeNull();
+            
+            // Verify file was reset to default
+            var fileContent = File.ReadAllText(_testCachePath);
+            var deserialized = JsonSerializer.Deserialize<ConversionCacheDTO>(fileContent);
+            deserialized.LastUpdated.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
+            deserialized.ConversionData.Should().BeEquivalentTo(new List<ConversionData> { convData2 });
+        }
 
         [Test]
         public void Constructor_WhenParentDirectoryDoesNotExist_CreatesDirectory()
