@@ -68,13 +68,13 @@ public class CurrencyCache
         _cachedConversionData.ConversionData
             .FirstOrDefault(x =>
                 string.Equals(x.Key, conversionKey, StringComparison.Ordinal) &&
-                !Expired(x));
+                !IsExpired(x));
 
     public void ResetCache(bool onlyExpired = false)
     {
         if (onlyExpired)
         {
-            var expiredCache = _cachedConversionData.ConversionData.Where(Expired);
+            var expiredCache = _cachedConversionData.ConversionData.Where(IsExpired);
 
             _cachedConversionData = new ConversionCacheDTO(DateTime.Now,
                 _cachedConversionData.ConversionData.Except(expiredCache).ToHashSet());
@@ -93,7 +93,7 @@ public class CurrencyCache
         File.WriteAllText(_cachePath, serializedConversionData);
     }
 
-    private static bool Expired(ConversionData conversionData)
+    private static bool IsExpired(ConversionData conversionData)
     {
         return conversionData.UpdatedAt < DateTime.Now - CacheDuration;
     }
