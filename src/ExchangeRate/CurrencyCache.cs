@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace ExchangeRate;
@@ -39,18 +40,19 @@ public class CurrencyCache
         }
     }
 
+    [SuppressMessage("Minor Code Smell", "S3267:Loops should be simplified with \"LINQ\" expressions",
+        Justification = "Applying the fixes will not create more readable code")]
     public void SaveToCacheData(IEnumerable<ConversionData> conversionDataList)
     {
         foreach (var conversionData in conversionDataList)
         {
-            if (!_cachedConversionData.ConversionData.Contains(conversionData))
+            if (_cachedConversionData.ConversionData.Add(conversionData))
             {
-                _cachedConversionData.ConversionData.Add(conversionData);
+                continue;
             }
-            else
-            {
-                UpdateCachedConversionData(conversionData);
-            }
+            
+            _cachedConversionData.ConversionData.Remove(conversionData);
+            _cachedConversionData.ConversionData.Add(conversionData);
         }
 
         SerializeAndSaveConversionData();
@@ -75,18 +77,5 @@ public class CurrencyCache
     {
         var serializedConversionData = JsonSerializer.Serialize(_cachedConversionData);
         File.WriteAllText(_cachePath, serializedConversionData);
-    }
-
-    private void UpdateCachedConversionData(ConversionData conversionData)
-    {
-        var oldConversionData = _cachedConversionData.ConversionData
-            .FirstOrDefault(d => string.Equals(d.Key, conversionData.Key, StringComparison.Ordinal));
-
-        if (oldConversionData is not null)
-        {
-            _cachedConversionData.ConversionData.Remove(oldConversionData);
-        }
-
-        _cachedConversionData.ConversionData.Add(conversionData);
     }
 }

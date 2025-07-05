@@ -68,10 +68,7 @@ namespace ExchangeRateTests
         public void Constructor_WhenCacheFileExists_LoadsExistingData()
         {
             // Arrange
-            var testData = new ConversionCacheDTO(DateTime.Now, new List<ConversionData>
-            {
-                new("USD-EUR", 0.85f)
-            });
+            var testData = new ConversionCacheDTO(DateTime.Now, [new ConversionData("USD-EUR", 0.85f)]);
             
             var serializedData = JsonSerializer.Serialize(testData);
             File.WriteAllText(_testCachePath, serializedData);
