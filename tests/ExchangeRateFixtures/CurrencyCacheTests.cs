@@ -189,8 +189,10 @@ namespace ExchangeRateTests
         [Test]
         public void ResetCache_WithOnlyExpiredSetTrue_ClearsOnlyExpiredCacheData()
         {
-            var convData1 = new ConversionData("USD-EUR", 0.85f, DateTime.Now - TimeSpan.FromHours(13));
-            var convData2 = new ConversionData("EUR-GBP", 0.90f, DateTime.Now - TimeSpan.FromHours(11));
+            var convData1 = new ConversionData("USD-EUR", 0.85f,
+                DateTime.Now - CurrencyCache.CacheDuration.Add(TimeSpan.FromHours(1)));
+            var convData2 = new ConversionData("EUR-GBP", 0.90f,
+                DateTime.Now - CurrencyCache.CacheDuration.Add(TimeSpan.FromHours(-1)));
             
             // Arrange
             var testData = new List<ConversionData> { convData1, convData2 };

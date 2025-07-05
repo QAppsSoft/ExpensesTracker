@@ -7,7 +7,7 @@ public class CurrencyCache
 {
     private readonly string _cachePath;
     private ConversionCacheDTO _cachedConversionData;
-    public readonly TimeSpan CacheDuration = TimeSpan.FromHours(12);
+    public static readonly TimeSpan CacheDuration = TimeSpan.FromHours(12);
 
     public CurrencyCache(string cachePath)
     {
@@ -66,17 +66,18 @@ public class CurrencyCache
 
     public ConversionData? GetCachedConversionData(string conversionKey) =>
         _cachedConversionData.ConversionData
-            .FirstOrDefault(x => string.Equals(x.Key, conversionKey, StringComparison.Ordinal));
+            .FirstOrDefault(x =>
+                string.Equals(x.Key, conversionKey, StringComparison.Ordinal) &&
+                !Expired(x));
 
     public void ResetCache(bool onlyExpired = false)
     {
         if (onlyExpired)
         {
-            var expired = _cachedConversionData.ConversionData
-                .Where(d => d.UpdatedAt < DateTime.Now - CacheDuration);
+            var expiredCache = _cachedConversionData.ConversionData.Where(Expired);
 
             _cachedConversionData = new ConversionCacheDTO(DateTime.Now,
-                _cachedConversionData.ConversionData.Except(expired).ToHashSet());
+                _cachedConversionData.ConversionData.Except(expiredCache).ToHashSet());
         }
         else
         {
@@ -90,5 +91,10 @@ public class CurrencyCache
     {
         var serializedConversionData = JsonSerializer.Serialize(_cachedConversionData);
         File.WriteAllText(_cachePath, serializedConversionData);
+    }
+
+    private static bool Expired(ConversionData conversionData)
+    {
+        return conversionData.UpdatedAt < DateTime.Now - CacheDuration;
     }
 }
