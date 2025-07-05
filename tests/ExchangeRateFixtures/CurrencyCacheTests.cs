@@ -68,7 +68,7 @@ namespace ExchangeRateTests
         public void Constructor_WhenCacheFileExists_LoadsExistingData()
         {
             // Arrange
-            var testData = new ConversionCacheDTO(DateTime.Now, [new ConversionData("USD-EUR", 0.85f)]);
+            var testData = new ConversionCacheDTO(DateTime.Now, [new ConversionData("USD-EUR", 0.85f, DateTime.Now)]);
             
             var serializedData = JsonSerializer.Serialize(testData);
             File.WriteAllText(_testCachePath, serializedData);
@@ -85,7 +85,7 @@ namespace ExchangeRateTests
         public void SaveToCacheData_WithSingleNewItem_AddsItemToCache()
         {
             // Arrange
-            var testData = new ConversionData("USD-EUR", 0.85f);
+            var testData = new ConversionData("USD-EUR", 0.85f, DateTime.Now);
 
             // Act
             _currencyCache.SaveToCacheData(testData);
@@ -106,10 +106,10 @@ namespace ExchangeRateTests
         public void SaveToCacheData_WithExistingItem_UpdatesItemInCache()
         {
             // Arrange
-            var initialData = new ConversionData("USD-EUR", 0.85f);
+            var initialData = new ConversionData("USD-EUR", 0.85f, DateTime.Now);
             _currencyCache.SaveToCacheData(initialData);
 
-            var updatedData = new ConversionData("USD-EUR", 0.86f);
+            var updatedData = new ConversionData("USD-EUR", 0.86f, DateTime.Now);
 
             // Act
             _currencyCache.SaveToCacheData(updatedData);
@@ -129,13 +129,13 @@ namespace ExchangeRateTests
         public void SaveToCacheData_WithMultipleItems_AddsOrUpdatesAllItems()
         {
             // Arrange
-            var initialData = new ConversionData("USD-EUR", 0.85f);
+            var initialData = new ConversionData("USD-EUR", 0.85f, DateTime.Now);
             _currencyCache.SaveToCacheData(initialData);
 
             var testData = new List<ConversionData>
             {
-                new("USD-EUR", 0.86f),
-                new("EUR-GBP", 0.90f)
+                new("USD-EUR", 0.86f, DateTime.Now),
+                new("EUR-GBP", 0.90f, DateTime.Now)
             };
 
             // Act
@@ -167,8 +167,8 @@ namespace ExchangeRateTests
             // Arrange
             var testData = new List<ConversionData>
             {
-                new("USD-EUR", 0.85f),
-                new("EUR-GBP", 0.90f)
+                new("USD-EUR", 0.85f, DateTime.Now),
+                new("EUR-GBP", 0.90f, DateTime.Now)
             };
             _currencyCache.SaveToCacheData(testData);
 

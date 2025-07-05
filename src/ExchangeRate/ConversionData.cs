@@ -1,6 +1,6 @@
 namespace ExchangeRate;
 
-public sealed record ConversionData(string Key, float Value)
+public sealed record ConversionData(string Key, float Value, DateTime UpdatedAt)
 {
     public bool Equals(ConversionData? obj)
     {
