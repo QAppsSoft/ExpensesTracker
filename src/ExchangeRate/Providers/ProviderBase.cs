@@ -10,6 +10,7 @@ public abstract class ProviderBase : IProvider, IDisposable
 {
     protected readonly JsonSerializerOptions? Options = new() { PropertyNameCaseInsensitive = true };
     protected readonly HttpClient HttpClient;
+    private const string CurrencyPairSeparator = "-";
 
     protected ProviderBase()
     {
@@ -29,7 +30,7 @@ public abstract class ProviderBase : IProvider, IDisposable
 
         var rates = exchangeResponse.Rates.Select(rate =>
             new RateDto(
-                $"{baseCurrency.ToUpper(CultureInfo.InvariantCulture)}_{rate.Key.ToUpper(CultureInfo.InvariantCulture)}",
+                $"{baseCurrency.ToUpper(CultureInfo.InvariantCulture)}{CurrencyPairSeparator}{rate.Key.ToUpper(CultureInfo.InvariantCulture)}",
                 rate.Value, date));
 
         return rates;
