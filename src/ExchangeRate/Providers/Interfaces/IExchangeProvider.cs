@@ -5,7 +5,7 @@ namespace ExchangeRate.Providers.Interfaces;
 /// <summary>
 ///     Provides exchange rates for different currencies.
 /// </summary>
-public interface ICurrencyProvider
+public interface IExchangeProvider
 {
     /// <summary>
     ///     Gets a collection of providers that can be used to retrieve exchange rates.

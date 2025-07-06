@@ -3,7 +3,7 @@ using ExchangeRate.Providers.Models;
 
 namespace ExchangeRate.Providers;
 
-public class CurrencyProvider(IEnumerable<IProvider> providers) : ICurrencyProvider
+public class ExchangeProvider(IEnumerable<IProvider> providers) : IExchangeProvider
 {
     public IEnumerable<IProvider> Providers { get; } = providers ?? throw new ArgumentNullException(nameof(providers));
 
