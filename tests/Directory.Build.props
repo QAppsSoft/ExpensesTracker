@@ -5,11 +5,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AwesomeAssertions" />     
+    <PackageReference Include="AwesomeAssertions" />
+    <PackageReference Include="Moq" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="AwesomeAssertions"/>
+    <Using Include="Moq" />
   </ItemGroup>
   
 </Project>
