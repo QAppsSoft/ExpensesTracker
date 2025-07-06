@@ -22,14 +22,14 @@ public abstract class ProviderBase : IProvider, IDisposable
     public abstract string Id { get; }
     public abstract string Name { get; }
 
-    public async Task<IEnumerable<RateDto>> GetRatesAsync(string baseCurrency)
+    public async Task<IEnumerable<CurrencyPairRate>> GetRatesAsync(string baseCurrency)
     {
         var exchangeResponse = await GetAsync(baseCurrency).ConfigureAwait(false);
 
         var date = exchangeResponse.TimeLastUpdate;
 
         var rates = exchangeResponse.Rates.Select(rate =>
-            new RateDto(
+            new CurrencyPairRate(
                 $"{baseCurrency.ToUpper(CultureInfo.InvariantCulture)}{CurrencyPairSeparator}{rate.Key.ToUpper(CultureInfo.InvariantCulture)}",
                 rate.Value, date));
 

@@ -7,12 +7,12 @@ public class ExchangeProvider(IEnumerable<IProvider> providers) : IExchangeProvi
 {
     public IEnumerable<IProvider> Providers { get; } = providers ?? throw new ArgumentNullException(nameof(providers));
 
-    public Task<IEnumerable<RateDto>> GetRatesAsync(string baseCurrency = "USD")
+    public Task<IEnumerable<CurrencyPairRate>> GetRatesAsync(string baseCurrency = "USD")
     {
         return Providers.First().GetRatesAsync(baseCurrency);
     }
 
-    public Task<IEnumerable<RateDto>> GetRatesByProviderAsync(IProvider provider, string baseCurrency = "USD")
+    public Task<IEnumerable<CurrencyPairRate>> GetRatesByProviderAsync(IProvider provider, string baseCurrency = "USD")
     {
         return provider.GetRatesAsync(baseCurrency);
     }

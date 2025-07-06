@@ -3,4 +3,4 @@ namespace ExchangeRate.Providers.Models;
 /// <summary>
 ///     Represents a currency pair with its corresponding exchange rate.
 /// </summary>
-public record RateDto(string CurrencyPair, double Rate, DateTime LastUpdated);
+public record CurrencyPairRate(string CurrencyPair, double Rate, DateTime LastUpdated);

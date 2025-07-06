@@ -22,5 +22,5 @@ public interface IProvider
     /// </summary>
     /// <param name="baseCurrency">The base currency to retrieve exchange rates for.</param>
     /// <returns>A sequence of RateDto objects representing the exchange rates.</returns>
-    Task<IEnumerable<RateDto>> GetRatesAsync(string baseCurrency);
+    Task<IEnumerable<CurrencyPairRate>> GetRatesAsync(string baseCurrency);
 }

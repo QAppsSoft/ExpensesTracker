@@ -35,7 +35,7 @@ namespace ExchangeRateFixtures.Providers
         public async Task GetRatesAsync_ShouldReturnRatesFromFirstProvider()
         {
             // Arrange
-            var expectedRates = new List<RateDto>
+            var expectedRates = new List<CurrencyPairRate>
             {
                 new("USD-EUR", 0.85, DateTime.UtcNow),
                 new("USD-GBP", 0.75, DateTime.UtcNow)
@@ -55,7 +55,7 @@ namespace ExchangeRateFixtures.Providers
         public async Task GetRatesByProviderAsync_ShouldReturnRatesFromSpecifiedProvider()
         {
             // Arrange
-            var expectedRates = new List<RateDto>
+            var expectedRates = new List<CurrencyPairRate>
             {
                 new("USD-EUR", 0.85, DateTime.UtcNow),
                 new("USD-GBP", 0.75, DateTime.UtcNow)
