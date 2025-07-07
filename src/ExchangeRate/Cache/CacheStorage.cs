@@ -1,8 +1,8 @@
 using System.Text.Json;
-using ExchangeRate.Interfaces;
+using ExchangeRate.Cache.Interfaces;
 using ExchangeRate.Providers.Models;
 
-namespace ExchangeRate;
+namespace ExchangeRate.Cache;
 
 public class CacheStorage : ICacheStorage
 {

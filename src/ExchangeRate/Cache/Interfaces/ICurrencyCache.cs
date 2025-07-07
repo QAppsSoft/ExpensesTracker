@@ -1,6 +1,6 @@
 using ExchangeRate.Providers.Models;
 
-namespace ExchangeRate.Interfaces;
+namespace ExchangeRate.Cache.Interfaces;
 
 public interface ICurrencyCache
 {

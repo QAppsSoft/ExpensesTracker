@@ -1,9 +1,9 @@
 using System.Text.Json;
-using ExchangeRate;
+using ExchangeRate.Cache;
 using ExchangeRate.Providers.Models;
 using TestsCommons;
 
-namespace ExchangeRateFixtures;
+namespace ExchangeRateFixtures.Cache;
 
 [TestFixture]
 [TestOf(typeof(CacheStorage))]
