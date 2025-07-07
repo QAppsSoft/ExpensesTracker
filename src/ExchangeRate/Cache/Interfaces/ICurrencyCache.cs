@@ -4,7 +4,7 @@ namespace ExchangeRate.Cache.Interfaces;
 
 public interface ICurrencyCache
 {
-    void SaveToCacheData(IEnumerable<CurrencyPairRate> conversionDataList);
-    CurrencyPairRate? GetCachedConversionData(string fromCurrency, string toCurrency);
-    void ResetCache(bool onlyExpired = false);
+    void SaveToCurrencyCache(IEnumerable<CurrencyPairRate> currencyPairs);
+    CurrencyPairRate? LoadFromCurrencyCache(string fromCurrency, string toCurrency);
+    void ClearCache(bool onlyExpired = false);
 }

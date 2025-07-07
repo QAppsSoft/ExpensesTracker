@@ -7,6 +7,6 @@ public static class CurrencyCacheExtensions
 {
     public static void SaveToCurrencyCache(this ICurrencyCache currencyCache, CurrencyPairRate currencyPairRate)
     {
-        currencyCache.SaveToCacheData([currencyPairRate]);
+        currencyCache.SaveToCurrencyCache([currencyPairRate]);
     }
 }

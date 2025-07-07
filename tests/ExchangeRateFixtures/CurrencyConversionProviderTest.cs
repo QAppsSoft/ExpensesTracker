@@ -81,14 +81,14 @@ public class CurrencyConversionProviderTest
     {
         // Arrange
         var cachedRate = new CurrencyPairRate("USD", "EUR", 0.85, DateTime.UtcNow);
-        _mockCurrencyCache.Setup(c => c.GetCachedConversionData("USD", "EUR")).Returns(cachedRate);
+        _mockCurrencyCache.Setup(c => c.LoadFromCurrencyCache("USD", "EUR")).Returns(cachedRate);
 
         // Act
         var result = await _currencyConversionProvider.ConvertAsync(100, "USD", "EUR");
 
         // Assert
         result.Should().Be(85);
-        _mockCurrencyCache.Verify(c => c.GetCachedConversionData("USD", "EUR"), Times.Once);
+        _mockCurrencyCache.Verify(c => c.LoadFromCurrencyCache("USD", "EUR"), Times.Once);
         _mockExchangeProvider.Verify(p => p.GetRatesAsync(It.IsAny<string>()), Times.Never);
     }
     
@@ -100,7 +100,7 @@ public class CurrencyConversionProviderTest
         {
             new("USD", "EUR", 0.85, DateTime.UtcNow)
         };
-        _mockCurrencyCache.Setup(c => c.GetCachedConversionData("USD", "EUR")).Returns((CurrencyPairRate)null);
+        _mockCurrencyCache.Setup(c => c.LoadFromCurrencyCache("USD", "EUR")).Returns((CurrencyPairRate)null);
         _mockExchangeProvider.Setup(p => p.GetRatesAsync("USD")).ReturnsAsync(rates);
 
         // Act
@@ -108,9 +108,9 @@ public class CurrencyConversionProviderTest
 
         // Assert
         result.Should().Be(85);
-        _mockCurrencyCache.Verify(c => c.GetCachedConversionData("USD", "EUR"), Times.Once);
+        _mockCurrencyCache.Verify(c => c.LoadFromCurrencyCache("USD", "EUR"), Times.Once);
         _mockExchangeProvider.Verify(p => p.GetRatesAsync("USD"), Times.Once);
-        _mockCurrencyCache.Verify(c => c.SaveToCacheData(It.IsAny<IEnumerable<CurrencyPairRate>>()), Times.Once);
+        _mockCurrencyCache.Verify(c => c.SaveToCurrencyCache(It.IsAny<IEnumerable<CurrencyPairRate>>()), Times.Once);
     }
     
     [Test]
@@ -121,7 +121,7 @@ public class CurrencyConversionProviderTest
         {
             new("USD", "GBP", 0.75, DateTime.UtcNow)
         };
-        _mockCurrencyCache.Setup(c => c.GetCachedConversionData("USD", "EUR")).Returns((CurrencyPairRate)null);
+        _mockCurrencyCache.Setup(c => c.LoadFromCurrencyCache("USD", "EUR")).Returns((CurrencyPairRate)null);
         _mockExchangeProvider.Setup(p => p.GetRatesAsync("USD")).ReturnsAsync(rates);
 
         // Act
@@ -130,7 +130,7 @@ public class CurrencyConversionProviderTest
         // Assert
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage("Rate for USD-EUR not found.");
-        _mockCurrencyCache.Verify(c => c.GetCachedConversionData("USD", "EUR"), Times.Once);
+        _mockCurrencyCache.Verify(c => c.LoadFromCurrencyCache("USD", "EUR"), Times.Once);
         _mockExchangeProvider.Verify(p => p.GetRatesAsync("USD"), Times.Once);
     }
 }

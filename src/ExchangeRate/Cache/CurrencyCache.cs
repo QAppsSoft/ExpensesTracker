@@ -16,11 +16,11 @@ public class CurrencyCache : ICurrencyCache
         _cache = _cacheStorage.Load().ToHashSet(CurrencyPairRateComparer.CreateInstance());
     }
     
-    public void SaveToCacheData(IEnumerable<CurrencyPairRate> conversionDataList)
+    public void SaveToCurrencyCache(IEnumerable<CurrencyPairRate> currencyPairs)
     {
         var oldCache = _cache;
 
-        var combinedSet = conversionDataList.ToHashSet(CurrencyPairRateComparer.CreateInstance());
+        var combinedSet = currencyPairs.ToHashSet(CurrencyPairRateComparer.CreateInstance());
         combinedSet.UnionWith(oldCache);
 
         _cache = combinedSet;
@@ -28,13 +28,13 @@ public class CurrencyCache : ICurrencyCache
         _cacheStorage.Save(_cache);
     }
 
-    public CurrencyPairRate? GetCachedConversionData(string fromCurrency, string toCurrency) =>
+    public CurrencyPairRate? LoadFromCurrencyCache(string fromCurrency, string toCurrency) =>
         _cache.FirstOrDefault(x =>
             string.Equals(x.FromCurrency, fromCurrency, StringComparison.Ordinal) &&
             string.Equals(x.ToCurrency, toCurrency, StringComparison.Ordinal) &&
             !IsExpired(x));
 
-    public void ResetCache(bool onlyExpired = false)
+    public void ClearCache(bool onlyExpired = false)
     {
         if (onlyExpired)
         {

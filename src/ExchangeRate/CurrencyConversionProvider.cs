@@ -9,7 +9,7 @@ public class CurrencyConversionProvider(IExchangeProvider exchangeProvider, ICur
     public async Task<double> ConvertAsync(double amount, string fromCurrency, string toCurrency)
     {
         // Check if the currency rate is already cached and return the result if it is.
-        var cached = currencyCache.GetCachedConversionData(fromCurrency, toCurrency);
+        var cached = currencyCache.LoadFromCurrencyCache(fromCurrency, toCurrency);
         if (cached is not null)
         {
             return amount * cached.Rate;

@@ -62,7 +62,7 @@ namespace ExchangeRateFixtures.Cache
             var cache = new CurrencyCache(_cacheStorage);
             
             // Assert
-            var cachedItem = cache.GetCachedConversionData("USD", "EUR");
+            var cachedItem = cache.LoadFromCurrencyCache("USD", "EUR");
             cachedItem.Should().NotBeNull();
             cachedItem.FromCurrency.Should().Be("USD");
             cachedItem.ToCurrency.Should().Be("EUR");
@@ -79,7 +79,7 @@ namespace ExchangeRateFixtures.Cache
             _currencyCache.SaveToCurrencyCache(testData);
 
             // Assert
-            var cachedItem = _currencyCache.GetCachedConversionData("USD", "EUR");
+            var cachedItem = _currencyCache.LoadFromCurrencyCache("USD", "EUR");
             cachedItem.Should().NotBeNull();
             cachedItem.FromCurrency.Should().Be("USD");
             cachedItem.ToCurrency.Should().Be("EUR");
@@ -104,7 +104,7 @@ namespace ExchangeRateFixtures.Cache
             _currencyCache.SaveToCurrencyCache(updatedData);
 
             // Assert
-            var cachedItem = _currencyCache.GetCachedConversionData("USD", "EUR");
+            var cachedItem = _currencyCache.LoadFromCurrencyCache("USD", "EUR");
             cachedItem.Should().NotBeNull();
             cachedItem.FromCurrency.Should().Be("USD");
             cachedItem.ToCurrency.Should().Be("EUR");
@@ -130,11 +130,11 @@ namespace ExchangeRateFixtures.Cache
             };
 
             // Act
-            _currencyCache.SaveToCacheData(testData);
+            _currencyCache.SaveToCurrencyCache(testData);
 
             // Assert
-            _currencyCache.GetCachedConversionData("USD", "EUR").Rate.Should().Be(0.86f);
-            _currencyCache.GetCachedConversionData("EUR", "GBP").Should().NotBeNull();
+            _currencyCache.LoadFromCurrencyCache("USD", "EUR").Rate.Should().Be(0.86f);
+            _currencyCache.LoadFromCurrencyCache("EUR", "GBP").Should().NotBeNull();
 
             // Verify file contains both items
             var fileContent = File.ReadAllText(_testCachePath);
@@ -146,7 +146,7 @@ namespace ExchangeRateFixtures.Cache
         public void GetCachedConversionData_WithNonExistingKey_ReturnsNull()
         {
             // Act
-            var result = _currencyCache.GetCachedConversionData("NON", "EXISTENT");
+            var result = _currencyCache.LoadFromCurrencyCache("NON", "EXISTENT");
 
             // Assert
             result.Should().BeNull();
@@ -161,14 +161,14 @@ namespace ExchangeRateFixtures.Cache
                 new("USD", "EUR", 0.85f, DateTime.Now),
                 new("EUR", "GBP", 0.90f, DateTime.Now)
             };
-            _currencyCache.SaveToCacheData(testData);
+            _currencyCache.SaveToCurrencyCache(testData);
 
             // Act
-            _currencyCache.ResetCache();
+            _currencyCache.ClearCache();
 
             // Assert
-            _currencyCache.GetCachedConversionData("USD", "EUR").Should().BeNull();
-            _currencyCache.GetCachedConversionData("EUR", "GBP").Should().BeNull();
+            _currencyCache.LoadFromCurrencyCache("USD", "EUR").Should().BeNull();
+            _currencyCache.LoadFromCurrencyCache("EUR", "GBP").Should().BeNull();
 
             // Verify file was reset to default
             var fileContent = File.ReadAllText(_testCachePath);
@@ -186,14 +186,14 @@ namespace ExchangeRateFixtures.Cache
 
             // Arrange
             var testData = new List<CurrencyPairRate> { convData1, convData2 };
-            _currencyCache.SaveToCacheData(testData);
+            _currencyCache.SaveToCurrencyCache(testData);
 
             // Act
-            _currencyCache.ResetCache(true);
+            _currencyCache.ClearCache(true);
 
             // Assert
-            _currencyCache.GetCachedConversionData("USD", "EUR").Should().BeNull();
-            _currencyCache.GetCachedConversionData("EUR", "GBP").Should().NotBeNull();
+            _currencyCache.LoadFromCurrencyCache("USD", "EUR").Should().BeNull();
+            _currencyCache.LoadFromCurrencyCache("EUR", "GBP").Should().NotBeNull();
 
             // Verify file was reset to default
             var fileContent = File.ReadAllText(_testCachePath);
