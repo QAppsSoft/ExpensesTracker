@@ -28,11 +28,6 @@ public class CurrencyCache : ICurrencyCache
         _cacheStorage.Save(_cache);
     }
 
-    public void SaveToCacheData(CurrencyPairRate conversionData)
-    {
-        SaveToCacheData([conversionData]);
-    }
-
     public CurrencyPairRate? GetCachedConversionData(string fromCurrency, string toCurrency) =>
         _cache.FirstOrDefault(x =>
             string.Equals(x.FromCurrency, fromCurrency, StringComparison.Ordinal) &&

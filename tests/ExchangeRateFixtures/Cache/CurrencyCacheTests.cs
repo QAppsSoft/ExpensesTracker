@@ -1,5 +1,6 @@
 using System.Text.Json;
 using ExchangeRate.Cache;
+using ExchangeRate.Cache.Extensions;
 using ExchangeRate.Providers.Models;
 using TestsCommons;
 
@@ -75,7 +76,7 @@ namespace ExchangeRateFixtures.Cache
             var testData = new CurrencyPairRate("USD", "EUR", 0.85f, DateTime.Now);
 
             // Act
-            _currencyCache.SaveToCacheData(testData);
+            _currencyCache.SaveToCurrencyCache(testData);
 
             // Assert
             var cachedItem = _currencyCache.GetCachedConversionData("USD", "EUR");
@@ -95,12 +96,12 @@ namespace ExchangeRateFixtures.Cache
         {
             // Arrange
             var initialData = new CurrencyPairRate("USD", "EUR", 0.85f, DateTime.Now);
-            _currencyCache.SaveToCacheData(initialData);
+            _currencyCache.SaveToCurrencyCache(initialData);
 
             var updatedData = new CurrencyPairRate("USD", "EUR", 0.86f, DateTime.Now);
 
             // Act
-            _currencyCache.SaveToCacheData(updatedData);
+            _currencyCache.SaveToCurrencyCache(updatedData);
 
             // Assert
             var cachedItem = _currencyCache.GetCachedConversionData("USD", "EUR");
@@ -120,7 +121,7 @@ namespace ExchangeRateFixtures.Cache
         {
             // Arrange
             var initialData = new CurrencyPairRate("USD", "EUR", 0.85f, DateTime.Now);
-            _currencyCache.SaveToCacheData(initialData);
+            _currencyCache.SaveToCurrencyCache(initialData);
 
             var testData = new List<CurrencyPairRate>
             {

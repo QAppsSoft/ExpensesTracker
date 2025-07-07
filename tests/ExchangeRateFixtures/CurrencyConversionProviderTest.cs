@@ -1,6 +1,6 @@
 using ExchangeRate;
 using ExchangeRate.Cache.Interfaces;
-using ExchangeRate.Interfaces;
+using ExchangeRate.Cache.Extensions;
 using ExchangeRate.Providers.Interfaces;
 using ExchangeRate.Providers.Models;
 
@@ -110,7 +110,7 @@ public class CurrencyConversionProviderTest
         result.Should().Be(85);
         _mockCurrencyCache.Verify(c => c.GetCachedConversionData("USD", "EUR"), Times.Once);
         _mockExchangeProvider.Verify(p => p.GetRatesAsync("USD"), Times.Once);
-        _mockCurrencyCache.Verify(c => c.SaveToCacheData(It.IsAny<CurrencyPairRate>()), Times.Once);
+        _mockCurrencyCache.Verify(c => c.SaveToCacheData(It.IsAny<IEnumerable<CurrencyPairRate>>()), Times.Once);
     }
     
     [Test]

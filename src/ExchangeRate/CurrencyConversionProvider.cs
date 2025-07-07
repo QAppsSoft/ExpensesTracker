@@ -1,5 +1,5 @@
+using ExchangeRate.Cache.Extensions;
 using ExchangeRate.Cache.Interfaces;
-using ExchangeRate.Interfaces;
 using ExchangeRate.Providers.Interfaces;
 
 namespace ExchangeRate;
@@ -26,7 +26,7 @@ public class CurrencyConversionProvider(IExchangeProvider exchangeProvider, ICur
             throw new InvalidOperationException($"Rate for {fromCurrency}-{toCurrency} not found.");
         }
 
-        currencyCache.SaveToCacheData(rate);
+        currencyCache.SaveToCurrencyCache(rate);
         
         return amount * rate.Rate;
     }
