@@ -24,7 +24,7 @@ public class CurrencyConversionProviderTest
         // Arrange
         var rates = new List<CurrencyPairRate>
         {
-            new("USD-EUR", 0.85, DateTime.UtcNow)
+            new("USD", "EUR", 0.85, DateTime.UtcNow)
         };
         _mockExchangeProvider.Setup(p => p.GetRatesAsync("USD")).ReturnsAsync(rates);
 
@@ -42,7 +42,7 @@ public class CurrencyConversionProviderTest
         // Arrange
         var rates = new List<CurrencyPairRate>
         {
-            new("USD-GBP", 0.75, DateTime.UtcNow)
+            new("USD", "GBP", 0.75, DateTime.UtcNow)
         };
         _mockExchangeProvider.Setup(p => p.GetRatesAsync("USD")).ReturnsAsync(rates);
 
