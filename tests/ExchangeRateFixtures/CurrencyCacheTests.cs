@@ -9,6 +9,7 @@ namespace ExchangeRateTests
     {
         private string _testCachePath;
         private CurrencyCache _currencyCache;
+        private CacheStorage _cacheStorage;
         private TemporalStorage _temporalStorage;
 
         [SetUp]
@@ -16,7 +17,8 @@ namespace ExchangeRateTests
         {
             _temporalStorage = new TemporalStorage();
             _testCachePath = _temporalStorage.GetTemporalFileName("test_cache", ".json");
-            _currencyCache = new CurrencyCache(_testCachePath);
+            _cacheStorage = new CacheStorage(_testCachePath);
+            _currencyCache = new CurrencyCache(_cacheStorage);
         }
 
         [TearDown]
@@ -39,43 +41,24 @@ namespace ExchangeRateTests
         public void Constructor_WithEmptyCachePath_ThrowsArgumentNullException()
         {
             // Act
-            Action act = () => _ = new CurrencyCache(string.Empty);
+            Action act = () => _ = new CurrencyCache(new CacheStorage(string.Empty));
 
             // Assert
             act.Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void Constructor_WhenCacheFileDoesNotExist_CreatesDefaultCacheFile()
-        {
-            // Arrange
-            var cachePath = Path.Combine(_temporalStorage.GetTemporalDirectory(), 
-                "other_folder",
-                "other_cache_file.json");
-
-            // Act
-            _ = new CurrencyCache(cachePath);
-
-            // Assert
-            File.Exists(cachePath).Should().BeTrue();
-            var fileContent = File.ReadAllText(cachePath);
-            var deserialized = JsonSerializer.Deserialize<ConversionCacheDTO>(fileContent);
-            deserialized.LastUpdated.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
-            deserialized.ConversionData.Should().BeEquivalentTo(new List<ConversionData>());
-        }
-
-        [Test]
         public void Constructor_WhenCacheFileExists_LoadsExistingData()
         {
             // Arrange
-            var testData = new ConversionCacheDTO(DateTime.Now, [new ConversionData("USD-EUR", 0.85f, DateTime.Now)]);
-            
+            var testData = new ConversionData[] { new("USD-EUR", 0.85f, DateTime.Now) };
+
             var serializedData = JsonSerializer.Serialize(testData);
             File.WriteAllText(_testCachePath, serializedData);
 
             // Act
-            var cache = new CurrencyCache(_testCachePath);
-
+            var cache = new CurrencyCache(_cacheStorage);
+            
             // Assert
             cache.GetCachedConversionData("USD-EUR").Should().NotBeNull();
             cache.GetCachedConversionData("USD-EUR").Value.Should().Be(0.85f);
@@ -98,8 +81,8 @@ namespace ExchangeRateTests
 
             // Verify file was updated
             var fileContent = File.ReadAllText(_testCachePath);
-            var deserialized = JsonSerializer.Deserialize<ConversionCacheDTO>(fileContent);
-            deserialized.ConversionData.Should().ContainSingle(d => d.Key == "USD-EUR");
+            var deserialized = JsonSerializer.Deserialize<List<ConversionData>>(fileContent);
+            deserialized.Should().ContainSingle(d => d.Key == "USD-EUR");
         }
 
         [Test]
@@ -121,8 +104,8 @@ namespace ExchangeRateTests
 
             // Verify only one item exists in cache
             var fileContent = File.ReadAllText(_testCachePath);
-            var deserialized = JsonSerializer.Deserialize<ConversionCacheDTO>(fileContent);
-            deserialized.ConversionData.Should().ContainSingle(d => d.Key == "USD-EUR");
+            var deserialized = JsonSerializer.Deserialize<List<ConversionData>>(fileContent);
+            deserialized.Should().ContainSingle(d => d.Key == "USD-EUR");
         }
 
         [Test]
@@ -147,8 +130,8 @@ namespace ExchangeRateTests
 
             // Verify file contains both items
             var fileContent = File.ReadAllText(_testCachePath);
-            var deserialized = JsonSerializer.Deserialize<ConversionCacheDTO>(fileContent);
-            deserialized.ConversionData.Should().HaveCount(2);
+            var deserialized = JsonSerializer.Deserialize<List<ConversionData>>(fileContent);
+            deserialized.Should().HaveCount(2);
         }
 
         [Test]
@@ -181,11 +164,10 @@ namespace ExchangeRateTests
 
             // Verify file was reset to default
             var fileContent = File.ReadAllText(_testCachePath);
-            var deserialized = JsonSerializer.Deserialize<ConversionCacheDTO>(fileContent);
-            deserialized.LastUpdated.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
-            deserialized.ConversionData.Should().BeEquivalentTo(new List<ConversionData>());
+            var deserialized = JsonSerializer.Deserialize<List<ConversionData>>(fileContent);
+            deserialized.Should().BeEquivalentTo(new List<ConversionData>());
         }
-        
+
         [Test]
         public void ResetCache_WithOnlyExpiredSetTrue_ClearsOnlyExpiredCacheData()
         {
@@ -193,7 +175,7 @@ namespace ExchangeRateTests
                 DateTime.Now - CurrencyCache.CacheDuration.Add(TimeSpan.FromHours(1)));
             var convData2 = new ConversionData("EUR-GBP", 0.90f,
                 DateTime.Now - CurrencyCache.CacheDuration.Add(TimeSpan.FromHours(-1)));
-            
+
             // Arrange
             var testData = new List<ConversionData> { convData1, convData2 };
             _currencyCache.SaveToCacheData(testData);
@@ -204,27 +186,11 @@ namespace ExchangeRateTests
             // Assert
             _currencyCache.GetCachedConversionData("USD-EUR").Should().BeNull();
             _currencyCache.GetCachedConversionData("EUR-GBP").Should().NotBeNull();
-            
+
             // Verify file was reset to default
             var fileContent = File.ReadAllText(_testCachePath);
-            var deserialized = JsonSerializer.Deserialize<ConversionCacheDTO>(fileContent);
-            deserialized.LastUpdated.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
-            deserialized.ConversionData.Should().BeEquivalentTo(new List<ConversionData> { convData2 });
-        }
-
-        [Test]
-        public void Constructor_WhenParentDirectoryDoesNotExist_CreatesDirectory()
-        {
-            // Arrange
-            var cachePath = _temporalStorage.GetTemporalFileName("other-cache", ".json");
-            var newDir = Path.GetDirectoryName(cachePath);
-
-            // Act
-            _ = new CurrencyCache(cachePath);
-
-            // Assert
-            Directory.Exists(newDir).Should().BeTrue();
-            File.Exists(cachePath).Should().BeTrue();
+            var deserialized = JsonSerializer.Deserialize<List<ConversionData>>(fileContent);
+            deserialized.Should().BeEquivalentTo(new List<ConversionData> { convData2 });
         }
     }
 }
