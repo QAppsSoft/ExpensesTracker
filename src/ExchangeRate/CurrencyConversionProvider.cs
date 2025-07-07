@@ -1,11 +1,19 @@
+using ExchangeRate.Interfaces;
 using ExchangeRate.Providers.Interfaces;
 
 namespace ExchangeRate;
 
-public class CurrencyConversionProvider(IExchangeProvider exchangeProvider)
+public class CurrencyConversionProvider(IExchangeProvider exchangeProvider, ICurrencyCache currencyCache)
 {
     public async Task<double> ConvertAsync(double amount, string fromCurrency, string toCurrency)
     {
+        // Check if the currency rate is already cached and return the result if it is.
+        var cached = currencyCache.GetCachedConversionData(fromCurrency, toCurrency);
+        if (cached is not null)
+        {
+            return amount * cached.Rate;
+        }
+
         var rates = await exchangeProvider.GetRatesAsync(fromCurrency).ConfigureAwait(false);
 
         var rate = rates.FirstOrDefault(r =>
@@ -17,6 +25,8 @@ public class CurrencyConversionProvider(IExchangeProvider exchangeProvider)
             throw new InvalidOperationException($"Rate for {fromCurrency}-{toCurrency} not found.");
         }
 
+        currencyCache.SaveToCacheData(rate);
+        
         return amount * rate.Rate;
     }
 }

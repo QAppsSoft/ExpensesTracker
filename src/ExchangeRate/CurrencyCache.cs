@@ -1,8 +1,9 @@
+using ExchangeRate.Interfaces;
 using ExchangeRate.Providers.Models;
 
 namespace ExchangeRate;
 
-public class CurrencyCache
+public class CurrencyCache : ICurrencyCache
 {
     private readonly CacheStorage _cacheStorage;
     private HashSet<CurrencyPairRate> _cache;
