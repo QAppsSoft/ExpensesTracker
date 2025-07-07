@@ -1,6 +1,5 @@
 using ExchangeRate;
 using ExchangeRate.Cache.Interfaces;
-using ExchangeRate.Cache.Extensions;
 using ExchangeRate.Providers.Interfaces;
 using ExchangeRate.Providers.Models;
 

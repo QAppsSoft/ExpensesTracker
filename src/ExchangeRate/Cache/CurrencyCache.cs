@@ -1,5 +1,4 @@
 using ExchangeRate.Cache.Interfaces;
-using ExchangeRate.Interfaces;
 using ExchangeRate.Providers.Models;
 
 namespace ExchangeRate.Cache;
