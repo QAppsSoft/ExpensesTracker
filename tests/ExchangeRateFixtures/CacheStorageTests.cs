@@ -1,5 +1,6 @@
 using System.Text.Json;
 using ExchangeRate;
+using ExchangeRate.Providers.Models;
 using TestsCommons;
 
 namespace ExchangeRateFixtures;
@@ -54,10 +55,10 @@ public class CacheStorageTests
     public void Save_ShouldCreateDirectoryAndFile_WhenTheyDontExist()
     {
         // Arrange
-        var testData = new List<ConversionData>
+        var testData = new List<CurrencyPairRate>
         {
-            new("USD-EUR", 0.86f, DateTime.Now),
-            new("EUR-GBP", 0.90f, DateTime.Now)
+            new("USD","EUR", 0.86f, DateTime.Now),
+            new("EUR","GBP", 0.90f, DateTime.Now)
         };
 
         // Act
@@ -68,7 +69,7 @@ public class CacheStorageTests
         File.Exists(_cachePath).Should().BeTrue();
 
         var fileContent = File.ReadAllText(_cachePath);
-        var deserializedData = JsonSerializer.Deserialize<List<ConversionData>>(fileContent);
+        var deserializedData = JsonSerializer.Deserialize<List<CurrencyPairRate>>(fileContent);
         deserializedData.Should().BeEquivalentTo(testData);
     }
 
@@ -76,8 +77,8 @@ public class CacheStorageTests
     public void Save_ShouldOverwriteExistingFile_WhenItExists()
     {
         // Arrange
-        var initialData = new List<ConversionData> { new("USD-EUR", 0.86f, DateTime.Now) };
-        var updatedData = new List<ConversionData> { new("EUR-GBP", 0.90f, DateTime.Now) };
+        var initialData = new List<CurrencyPairRate> { new("USD", "EUR", 0.86f, DateTime.Now) };
+        var updatedData = new List<CurrencyPairRate> { new("EUR", "GBP", 0.90f, DateTime.Now) };
 
         // Act
         _cacheStorage.Save(initialData);
@@ -85,7 +86,7 @@ public class CacheStorageTests
 
         // Assert
         var fileContent = File.ReadAllText(_cachePath);
-        var deserializedData = JsonSerializer.Deserialize<List<ConversionData>>(fileContent);
+        var deserializedData = JsonSerializer.Deserialize<List<CurrencyPairRate>>(fileContent);
         deserializedData.Should().BeEquivalentTo(updatedData);
     }
     
@@ -103,10 +104,10 @@ public class CacheStorageTests
     public void Load_ShouldReturnSavedData_WhenFileExists()
     {
         // Arrange
-        var testData = new List<ConversionData>
+        var testData = new List<CurrencyPairRate>
         {
-            new("USD-EUR", 0.86f, DateTime.Now),
-            new("EUR-GBP", 0.90f, DateTime.Now)
+            new("USD","EUR", 0.86f, DateTime.Now),
+            new("EUR","GBP", 0.90f, DateTime.Now)
         };
 
         _cacheStorage.Save(testData);
@@ -132,9 +133,9 @@ public class CacheStorageTests
     public void Clear_ShouldDeleteFile_WhenFileExists()
     {
         // Arrange
-        var testData = new List<ConversionData>
+        var testData = new List<CurrencyPairRate>
         {
-            new("USD-EUR", 0.86f, DateTime.Now)
+            new("USD","EUR", 0.86f, DateTime.Now)
         };
 
         _cacheStorage.Save(testData);
@@ -153,9 +154,9 @@ public class CacheStorageTests
         _cacheStorage.Load().Should().BeEmpty();
 
         // Save and verify
-        var testData = new List<ConversionData>
+        var testData = new List<CurrencyPairRate>
         {
-            new("USD-EUR", 0.8f, DateTime.Now)
+            new("USD","EUR", 0.8f, DateTime.Now)
         };
         _cacheStorage.Save(testData);
         _cacheStorage.Load().Should().BeEquivalentTo(testData);
@@ -165,9 +166,9 @@ public class CacheStorageTests
         _cacheStorage.Load().Should().BeEmpty();
 
         // Save again and verify
-        var newTestData = new List<ConversionData>
+        var newTestData = new List<CurrencyPairRate>
         {
-            new("EUR-GBP", 0.90f, DateTime.Now)
+            new("EUR","GBP", 0.90f, DateTime.Now)
         };
         _cacheStorage.Save(newTestData);
         _cacheStorage.Load().Should().BeEquivalentTo(newTestData);

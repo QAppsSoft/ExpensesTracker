@@ -1,5 +1,6 @@
 using System.Text.Json;
 using ExchangeRate.Interfaces;
+using ExchangeRate.Providers.Models;
 
 namespace ExchangeRate;
 
@@ -17,7 +18,7 @@ public class CacheStorage : ICacheStorage
         _cachePath = cachePath;
     }
 
-    public void Save(IEnumerable<ConversionData> conversionRates)
+    public void Save(IEnumerable<CurrencyPairRate> conversionRates)
     {
         var directoryName = Path.GetDirectoryName(_cachePath);
         if (!Directory.Exists(directoryName))
@@ -29,7 +30,7 @@ public class CacheStorage : ICacheStorage
         File.WriteAllText(_cachePath, serializedConversionData);
     }
 
-    public IEnumerable<ConversionData> Load()
+    public IEnumerable<CurrencyPairRate> Load()
     {
         if (!File.Exists(_cachePath))
         {
@@ -37,7 +38,7 @@ public class CacheStorage : ICacheStorage
         }
         
         var serializedConversionRates = File.ReadAllText(_cachePath);
-        var conversionRates = JsonSerializer.Deserialize<IEnumerable<ConversionData>>(serializedConversionRates);
+        var conversionRates = JsonSerializer.Deserialize<IEnumerable<CurrencyPairRate>>(serializedConversionRates);
         return conversionRates ?? [];
     }
 

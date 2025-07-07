@@ -1,9 +1,11 @@
+using ExchangeRate.Providers.Models;
+
 namespace ExchangeRate;
 
 public class CurrencyCache
 {
     private readonly CacheStorage _cacheStorage;
-    private HashSet<ConversionData> _cache;
+    private HashSet<CurrencyPairRate> _cache;
     public static readonly TimeSpan CacheDuration = TimeSpan.FromHours(12);
 
     public CurrencyCache(CacheStorage cacheStorage)
@@ -12,7 +14,7 @@ public class CurrencyCache
         _cache = _cacheStorage.Load().ToHashSet();
     }
     
-    public void SaveToCacheData(IEnumerable<ConversionData> conversionDataList)
+    public void SaveToCacheData(IEnumerable<CurrencyPairRate> conversionDataList)
     {
         var oldCache = _cache;
         
@@ -24,14 +26,15 @@ public class CurrencyCache
         _cacheStorage.Save(_cache);
     }
 
-    public void SaveToCacheData(ConversionData conversionData)
+    public void SaveToCacheData(CurrencyPairRate conversionData)
     {
         SaveToCacheData([conversionData]);
     }
 
-    public ConversionData? GetCachedConversionData(string conversionKey) =>
+    public CurrencyPairRate? GetCachedConversionData(string fromCurrency, string toCurrency) =>
         _cache.FirstOrDefault(x =>
-            string.Equals(x.Key, conversionKey, StringComparison.Ordinal) &&
+            string.Equals(x.FromCurrency, fromCurrency, StringComparison.Ordinal) &&
+            string.Equals(x.ToCurrency, toCurrency, StringComparison.Ordinal) &&
             !IsExpired(x));
 
     public void ResetCache(bool onlyExpired = false)
@@ -50,7 +53,7 @@ public class CurrencyCache
         _cacheStorage.Save(_cache);
     }
 
-    private static bool IsExpired(ConversionData conversionData)
+    private static bool IsExpired(CurrencyPairRate conversionData)
     {
         return conversionData.UpdatedAt < DateTime.Now - CacheDuration;
     }
