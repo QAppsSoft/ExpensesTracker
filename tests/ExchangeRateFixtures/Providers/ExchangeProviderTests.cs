@@ -11,6 +11,7 @@ namespace ExchangeRateFixtures.Providers
         private Mock<IProvider> _mockProvider2;
         private List<IProvider> _providers;
         private ExchangeProvider _exchangeProvider;
+        private IProviderSelector _providerSelector;
 
         [SetUp]
         public void SetUp()
@@ -18,14 +19,15 @@ namespace ExchangeRateFixtures.Providers
             _mockProvider1 = new Mock<IProvider>();
             _mockProvider2 = new Mock<IProvider>();
             _providers = [_mockProvider1.Object, _mockProvider2.Object];
-            _exchangeProvider = new ExchangeProvider(_providers);
+            _providerSelector = new FirstProviderSelector();
+            _exchangeProvider = new ExchangeProvider(_providers, _providerSelector);
         }
 
         [Test]
         public void Constructor_ShouldThrowArgumentNullException_WhenProvidersIsNull()
         {
             // Act
-            Action act = () => _ = new ExchangeProvider(null);
+            Action act = () => _ = new ExchangeProvider(null, _providerSelector);
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*providers*");
