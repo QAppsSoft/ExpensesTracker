@@ -14,18 +14,18 @@ public class CacheStorage : ICacheStorage
         {
             throw new ArgumentNullException(nameof(cachePath));
         }
+        
+        var directoryName = Path.GetDirectoryName(cachePath);
+        if (!Directory.Exists(directoryName))
+        {
+            Directory.CreateDirectory(directoryName);
+        }
 
         _cachePath = cachePath;
     }
 
     public void Save(IEnumerable<CurrencyPairRate> conversionRates)
     {
-        var directoryName = Path.GetDirectoryName(_cachePath);
-        if (!Directory.Exists(directoryName))
-        {
-            Directory.CreateDirectory(directoryName);
-        }
-        
         var serializedConversionData = JsonSerializer.Serialize(conversionRates);
         File.WriteAllText(_cachePath, serializedConversionData);
     }

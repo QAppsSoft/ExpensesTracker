@@ -52,7 +52,21 @@ public class CacheStorageTests
     }
     
     [Test]
-    public void Save_ShouldCreateDirectoryAndFile_WhenTheyDontExist()
+    public void Constructor_ShouldCreateDirectory_WhenDirectoryInPathDoesNotExist()
+    {
+        // Arrange
+        var path = Path.Combine(_temporalStorage.TempDirPath, "extra-folder", "cache-file.json");
+        
+        // Act
+        _ = new CacheStorage(path);
+
+        // Assert
+        var directory = Path.GetDirectoryName(path);
+        Directory.Exists(directory).Should().BeTrue();
+    }
+
+    [Test]
+    public void Save_ShouldCreateFileAndSaveData_WhenFileDoesNotExist()
     {
         // Arrange
         var testData = new List<CurrencyPairRate>
@@ -65,7 +79,6 @@ public class CacheStorageTests
         _cacheStorage.Save(testData);
 
         // Assert
-        Directory.Exists(Path.GetDirectoryName(_cachePath)).Should().BeTrue();
         File.Exists(_cachePath).Should().BeTrue();
 
         var fileContent = File.ReadAllText(_cachePath);
