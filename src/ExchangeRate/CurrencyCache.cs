@@ -11,14 +11,14 @@ public class CurrencyCache
     public CurrencyCache(CacheStorage cacheStorage)
     {
         _cacheStorage = cacheStorage ?? throw new ArgumentNullException(nameof(cacheStorage));
-        _cache = _cacheStorage.Load().ToHashSet();
+        _cache = _cacheStorage.Load().ToHashSet(CurrencyPairRateComparer.CreateInstance());
     }
     
     public void SaveToCacheData(IEnumerable<CurrencyPairRate> conversionDataList)
     {
         var oldCache = _cache;
-        
-        var combinedSet = conversionDataList.ToHashSet();
+
+        var combinedSet = conversionDataList.ToHashSet(CurrencyPairRateComparer.CreateInstance());
         combinedSet.UnionWith(oldCache);
 
         _cache = combinedSet;
