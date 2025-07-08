@@ -1,9 +1,13 @@
-using Api.Endpoints;
+using Api.Data;
+using Api.Endpoints.CategoryEndpoint;
+using Api.Endpoints.CategoryEndpoint.Repository;
+using Api.Endpoints.CategoryEndpoint.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 namespace Api;
 
-public class Program
+public static class Program
 {
     public static void Main(string[] args)
     {
@@ -18,6 +22,8 @@ public class Program
         // Register the DbContext
         builder.Services.AddDbContext<ExpensesTrackerDbContext>(options =>
             options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        builder.Services.AddAutoMapper(config => config.AddProfile<MappingConfig>());
 
         var app = builder.Build();
 
