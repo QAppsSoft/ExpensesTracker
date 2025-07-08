@@ -1,6 +1,10 @@
+using System.Net;
+using Api.Endpoints.CategoryEndpoint.DTO;
+using Api.Endpoints.CategoryEndpoint.Repository.Interfaces;
 using Api.Models;
+using AutoMapper;
 
-namespace Api.Endpoints;
+namespace Api.Endpoints.CategoryEndpoint;
 
 public static class CategoryEndpoints
 {
@@ -26,15 +30,32 @@ public static class CategoryEndpoints
             .WithDisplayName("Delete category")
             .WithDescription("Delete a single category.");
         
-        group.MapPost("/category", PostCategory)
+        group.MapPost("/category", CreateCategoryAsync)
             .WithName("PostCategory")
+            .Accepts<CategoryCreateDto>("application/json")
+            .Produces<APIResponse>(201)
+            .Produces(400)
             .WithDisplayName("Post category")
             .WithDescription("Post a new category.");
     }
 
-    private static Task PostCategory(HttpContext context, Category category)
+    private static async Task<IResult> CreateCategoryAsync(ICategoryRepository categoryRepository, IMapper mapper,
+        CategoryCreateDto newCategory)
     {
-        throw new NotImplementedException();
+        if (await categoryRepository.GetByNameAsync(newCategory.Name).ConfigureAwait(false) != null)
+        {
+            return TypedResults.BadRequest(
+                APIResponse.CreateError(HttpStatusCode.BadRequest, "Coupon Name already Exists"));
+        }
+        
+        var category = mapper.Map<Category>(newCategory);
+
+        await categoryRepository.CreateAsync(category).ConfigureAwait(false);
+        await categoryRepository.SaveChangesAsync().ConfigureAwait(false);
+
+        var categoryDto = mapper.Map<CategoryDto>(category);
+
+        return TypedResults.Ok(APIResponse.CreateSuccess(categoryDto, HttpStatusCode.Created));
     }
 
     private static Task DeleteCategory(HttpContext context, int id)
