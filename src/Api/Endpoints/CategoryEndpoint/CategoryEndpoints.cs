@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using Api.Endpoints.CategoryEndpoint.DTO;
 using Api.Endpoints.CategoryEndpoint.Repository.Interfaces;
@@ -6,6 +7,7 @@ using AutoMapper;
 
 namespace Api.Endpoints.CategoryEndpoint;
 
+[SuppressMessage("Style", "VSTHRD200:Use \"Async\" suffix for async methods")]
 public static class CategoryEndpoints
 {
     public static void ConfigureCategoryEndpoints(this WebApplication app)
