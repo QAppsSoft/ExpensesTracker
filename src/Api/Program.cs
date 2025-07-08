@@ -1,3 +1,5 @@
+using Scalar.AspNetCore;
+
 namespace Api;
 
 public class Program
@@ -18,11 +20,20 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference(options =>
+            {
+                options
+                    .WithTheme(ScalarTheme.Kepler)
+                    .WithDarkModeToggle()
+                    .WithClientButton();
+            });
         }
 
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+        
+        app.ConfigureCategoryEndpoints();
 
         app.Run();
     }
