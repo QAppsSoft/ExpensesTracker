@@ -6,7 +6,7 @@ on:
   push:
     branches: ["main"]
   pull_request:
-    branches: ["show-test-results-and-coverage-in-pr-with-github-actions"]  
+    branches: ["main", "show-test-results-and-coverage-in-pr-with-github-actions"]  
   release:
     types: [published]
 
