@@ -7,6 +7,11 @@ namespace Api.Endpoints.CategoryEndpoint.Repository;
 
 public class CategoryRepository(ExpensesTrackerDbContext context) : ICategoryRepository
 {
+    public async Task<ICollection<Category>> GetAllAsync()
+    {
+        return await context.Categories.ToListAsync().ConfigureAwait(false);
+    }
+
     public async Task<Category?> GetByNameAsync(string name)
     {
         return await context.Categories
@@ -14,9 +19,20 @@ public class CategoryRepository(ExpensesTrackerDbContext context) : ICategoryRep
             .ConfigureAwait(false);
     }
 
+    public async Task<Category?> GetByIdAsync(int id)
+    {
+        return await context.Categories.FindAsync(id).ConfigureAwait(false);
+    }
+
     public async Task CreateAsync(Category category)
     {
         await context.Categories.AddAsync(category).ConfigureAwait(false);
+    }
+
+    public Task RemoveAsync(Category category)
+    {
+        context.Categories.Remove(category);
+        return Task.CompletedTask;
     }
 
     public async Task SaveChangesAsync()
