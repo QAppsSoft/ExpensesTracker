@@ -4,7 +4,7 @@ public static class CategoryEndpoints
 {
     public static void ConfigureCategoryEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/api/category")
+        var group = app.MapGroup("/api")
             .WithName("Category")
             .WithDisplayName("Category")
             .WithDescription("Categories used for expense organization.");
