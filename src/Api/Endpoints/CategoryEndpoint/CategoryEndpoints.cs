@@ -14,21 +14,21 @@ public static class CategoryEndpoints
         var group = app.MapGroup("/api")
             .WithName("Category");
 
-        group.MapGet("/category", GetCategories)
+        group.MapGet("/categories", GetCategories)
             .WithName("GetCategory")
             .Produces<ICollection<CategoryDto>>();
 
-        group.MapGet("/category/{id:int}", GetCategoryById)
+        group.MapGet("/categories/{id:int}", GetCategoryById)
             .WithName("GetCategoryById")
             .Produces<CategoryDto>()
             .Produces(404);
 
-        group.MapDelete("/category/{id:int}", DeleteCategory)
+        group.MapDelete("/categories/{id:int}", DeleteCategory)
             .WithName("DeleteCategory")
             .Produces(204)
             .Produces(404);
 
-        group.MapPost("/category", CreateCategory)
+        group.MapPost("/categories", CreateCategory)
             .WithName("PostCategory")
             .Accepts<CategoryCreateDto>("application/json")
             .Produces<CategoryDto>(201)
@@ -85,6 +85,6 @@ public static class CategoryEndpoints
 
         var categoryDto = mapper.Map<CategoryDto>(category);
 
-        return TypedResults.Created($"/api/category/{categoryDto.Id}", categoryDto);
+        return TypedResults.Created($"/api/categories/{categoryDto.Id}", categoryDto);
     }
 }
