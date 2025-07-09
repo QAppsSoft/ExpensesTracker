@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Net;
 using Api.Endpoints.CategoryEndpoint.DTO;
 using Api.Endpoints.CategoryEndpoint.Repository.Interfaces;
 using Api.Models;
@@ -17,42 +16,43 @@ public static class CategoryEndpoints
 
         group.MapGet("/category", GetCategories)
             .WithName("GetCategory")
-            .Produces<APIResponse>(200);
+            .Produces<ICollection<CategoryDto>>();
 
         group.MapGet("/category/{id:int}", GetCategoryById)
             .WithName("GetCategoryById")
-            .Produces<APIResponse>(200)
+            .Produces<CategoryDto>()
             .Produces(404);
 
         group.MapDelete("/category/{id:int}", DeleteCategory)
             .WithName("DeleteCategory")
-            .Produces<APIResponse>(200)
+            .Produces(204)
             .Produces(404);
 
         group.MapPost("/category", CreateCategory)
             .WithName("PostCategory")
             .Accepts<CategoryCreateDto>("application/json")
-            .Produces<APIResponse>(201)
+            .Produces<CategoryDto>(201)
             .Produces(404);
     }
 
-    private static async Task<IResult> GetCategories(ICategoryRepository categoryRepository)
+    private static async Task<IResult> GetCategories(ICategoryRepository categoryRepository, IMapper mapper)
     {
         var categories = await categoryRepository.GetAllAsync().ConfigureAwait(false);
-        
-        return TypedResults.Ok(APIResponse.CreateSuccess(categories, HttpStatusCode.OK));
+        var categoriesDto = mapper.Map<ICollection<Category>, ICollection<CategoryDto>>(categories);
+        return TypedResults.Ok(categoriesDto);
     }
 
-    private static async Task<IResult> GetCategoryById(ICategoryRepository categoryRepository, int id)
+    private static async Task<IResult> GetCategoryById(ICategoryRepository categoryRepository, IMapper mapper, int id)
     {
         var category = await categoryRepository.GetByIdAsync(id).ConfigureAwait(false);
 
         if (category == null)
         {
-            return TypedResults.NotFound(APIResponse.CreateError(HttpStatusCode.NotFound, "Category not found"));
+            return TypedResults.NotFound();
         }
         
-        return TypedResults.Ok(APIResponse.CreateSuccess(category, HttpStatusCode.OK));
+        var categoryDto = mapper.Map<CategoryDto>(category);
+        return TypedResults.Ok(categoryDto);
     }
 
     private static async Task<IResult> DeleteCategory(ICategoryRepository categoryRepository, int id)
@@ -61,13 +61,13 @@ public static class CategoryEndpoints
 
         if (category == null)
         {
-            return TypedResults.NotFound(APIResponse.CreateError(HttpStatusCode.NotFound, "Category not found"));
+            return TypedResults.NotFound("Category not found");
         }
         
         await categoryRepository.RemoveAsync(category).ConfigureAwait(false);
         await categoryRepository.SaveChangesAsync().ConfigureAwait(false);
         
-        return TypedResults.Ok(APIResponse.CreateSuccess(HttpStatusCode.NoContent));
+        return TypedResults.NoContent();
     }
 
     private static async Task<IResult> CreateCategory(ICategoryRepository categoryRepository, IMapper mapper,
@@ -75,8 +75,7 @@ public static class CategoryEndpoints
     {
         if (await categoryRepository.GetByNameAsync(newCategory.Name).ConfigureAwait(false) != null)
         {
-            return TypedResults.BadRequest(
-                APIResponse.CreateError(HttpStatusCode.BadRequest, "Coupon Name already Exists"));
+            return TypedResults.BadRequest("Coupon Name already Exists");
         }
         
         var category = mapper.Map<Category>(newCategory);
@@ -86,6 +85,6 @@ public static class CategoryEndpoints
 
         var categoryDto = mapper.Map<CategoryDto>(category);
 
-        return TypedResults.Ok(APIResponse.CreateSuccess(categoryDto, HttpStatusCode.Created));
+        return TypedResults.Created($"/api/category/{categoryDto.Id}", categoryDto);
     }
 }
