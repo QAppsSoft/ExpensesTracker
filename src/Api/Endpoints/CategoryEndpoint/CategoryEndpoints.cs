@@ -11,7 +11,7 @@ public static class CategoryEndpoints
 {
     public static void ConfigureCategoryEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/api")
+        var group = app.MapGroup("/api/v1")
             .WithName("Category");
 
         group.MapGet("/categories", GetCategories)
