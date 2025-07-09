@@ -32,7 +32,7 @@ public static class CategoryEndpoints
             .WithName("PostCategory")
             .Accepts<CategoryCreateDto>("application/json")
             .Produces<CategoryDto>(201)
-            .Produces(404);
+            .Produces(400);
     }
 
     private static async Task<IResult> GetCategories(ICategoryRepository categoryRepository, IMapper mapper)
