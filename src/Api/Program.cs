@@ -1,6 +1,13 @@
+using Api.Data;
+using Api.Endpoints.CategoryEndpoint;
+using Api.Endpoints.CategoryEndpoint.Repository;
+using Api.Endpoints.CategoryEndpoint.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
+
 namespace Api;
 
-public class Program
+public static class Program
 {
     public static void Main(string[] args)
     {
@@ -11,6 +18,15 @@ public class Program
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
+        
+        // Register the DbContext
+        builder.Services.AddDbContext<ExpensesTrackerDbContext>(options =>
+            options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        // Register the CategoryRepository
+        builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+        builder.Services.AddAutoMapper(config => config.AddProfile<MappingConfig>());
 
         var app = builder.Build();
 
@@ -18,30 +34,20 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference(options =>
+            {
+                options
+                    .WithTheme(ScalarTheme.Kepler)
+                    .WithDarkModeToggle()
+                    .WithClientButton();
+            });
         }
 
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
-        var summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-        app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                        new WeatherForecast
-                        {
-                            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                            TemperatureC = Random.Shared.Next(-20, 55),
-                            Summary = summaries[Random.Shared.Next(summaries.Length)]
-                        })
-                    .ToArray();
-                return forecast;
-            })
-            .WithName("GetWeatherForecast");
+        
+        app.ConfigureCategoryEndpoints();
 
         app.Run();
     }
