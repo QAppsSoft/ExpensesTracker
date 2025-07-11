@@ -1,5 +1,5 @@
+using Api.Data;
 using Api.Endpoints.CategoryEndpoint.DTO;
-using Api.Models;
 using AutoMapper;
 
 namespace Api;

@@ -1,6 +1,6 @@
 using Api.Data;
+using Api.Data.Context;
 using Api.Endpoints.CategoryEndpoint.Repository;
-using Api.Models;
 using Microsoft.EntityFrameworkCore;
 using TestsCommons.Db;
 

@@ -1,4 +1,4 @@
-using Api.Data;
+using Api.Data.Context;
 using Api.Endpoints.CategoryEndpoint;
 using Api.Endpoints.CategoryEndpoint.Repository;
 using Api.Endpoints.CategoryEndpoint.Repository.Interfaces;
