@@ -1,3 +1,3 @@
-namespace Api.Endpoints.CategoryEndpoint.DTO;
+namespace Api.Models.Dto.Categories;
 
 public record CategoryCreateDto(string Name, string Description, string Color);

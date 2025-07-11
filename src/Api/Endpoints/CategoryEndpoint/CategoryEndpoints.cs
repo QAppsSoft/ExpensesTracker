@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Api.Data;
-using Api.Endpoints.CategoryEndpoint.DTO;
 using Api.Endpoints.CategoryEndpoint.Repository.Interfaces;
+using Api.Models.Dto.Categories;
 using AutoMapper;
 
 namespace Api.Endpoints.CategoryEndpoint;
