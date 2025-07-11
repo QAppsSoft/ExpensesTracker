@@ -1,0 +1,38 @@
+@page "/Categories"
+<h3>Categories</h3>
+
+<MudGrid>
+    <MudItem xs="12" sm="7">
+        <MudPaper Class="pa-4">
+            <MudForm>
+                <MudTextField T="string" Label="Category Name" Required="true" RequiredError="Category Name is required"/>
+                <MudColorPicker Label="Category Color" Required="true" RequiredError="Category Color is required"/>
+
+                <MudButton Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    
+    <MudItem xs="12" sm="5">
+        <MudPaper Class="pa-4 mud-height-full">
+            <MudDataGrid>
+                <Columns>
+                <PropertyColumn Title="Name"/>
+                <PropertyColumn  Title="Color"/>
+                <TemplateColumn CellClass="d-flex justify-end" Title="Actions">
+                    <CellTemplate>
+                    <MudStack Row>
+                        <MudButton Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">🗑️</MudButton>
+                        <MudButton Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">✏️️</MudButton>
+                    </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+                </Columns>
+            </MudDataGrid>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+
+}
