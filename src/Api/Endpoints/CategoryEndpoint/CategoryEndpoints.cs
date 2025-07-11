@@ -29,7 +29,7 @@ public static class CategoryEndpoints
 
         group.MapPost("/categories", CreateCategory)
             .WithName("PostCategory")
-            .Accepts<CategoryCreateDto>("application/json")
+            .Accepts<CreateCategoryDto>("application/json")
             .Produces<CategoryDto>(201)
             .Produces(400);
     }
@@ -70,14 +70,14 @@ public static class CategoryEndpoints
         return TypedResults.NoContent();
     }
 
-    private static async Task<IResult> CreateCategory(ICategoryRepository categoryRepository, CategoryCreateDto newCategoryDto)
+    private static async Task<IResult> CreateCategory(ICategoryRepository categoryRepository, CreateCategoryDto createCategoryDto)
     {
-        if (await categoryRepository.GetByNameAsync(newCategoryDto.Name).ConfigureAwait(false) != null)
+        if (await categoryRepository.GetByNameAsync(createCategoryDto.Name).ConfigureAwait(false) != null)
         {
             return TypedResults.BadRequest("Coupon Name already Exists");
         }
 
-        var category = newCategoryDto.ToCategory();
+        var category = createCategoryDto.ToCategory();
 
         await categoryRepository.CreateAsync(category).ConfigureAwait(false);
         await categoryRepository.SaveChangesAsync().ConfigureAwait(false);

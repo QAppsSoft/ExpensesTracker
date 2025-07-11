@@ -16,7 +16,7 @@ public static class CategoryExtensions
             Color = categoryDto.Color,
         };
 
-    public static Category ToCategory(this CategoryCreateDto createCategoryDto) =>
+    public static Category ToCategory(this CreateCategoryDto createCategoryDto) =>
         new()
         {
             Name = createCategoryDto.Name,
