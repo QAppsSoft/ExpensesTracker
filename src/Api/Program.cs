@@ -26,8 +26,6 @@ public static class Program
         // Register the CategoryRepository
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
-        builder.Services.AddAutoMapper(config => config.AddProfile<MappingConfig>());
-
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
