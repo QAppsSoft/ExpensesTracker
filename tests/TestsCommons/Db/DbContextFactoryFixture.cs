@@ -1,4 +1,4 @@
-using Api.Data;
+using Api.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace TestsCommons.Db;

@@ -1,6 +1,6 @@
-using Api.Models.BaseObjects;
+using Api.Data.BaseObjects;
 
-namespace Api.Models;
+namespace Api.Data;
 
 public class Category : IntEntityBase
 {

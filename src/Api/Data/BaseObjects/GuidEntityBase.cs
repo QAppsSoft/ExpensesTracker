@@ -1,4 +1,4 @@
-namespace Api.Models.BaseObjects;
+namespace Api.Data.BaseObjects;
 
 public class GuidEntityBase : IEntityBase<Guid>
 {
