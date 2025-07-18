@@ -1,4 +1,4 @@
-using Api.Models;
+using Api.Data;
 
 namespace Api.Endpoints.CategoryEndpoint.Repository.Interfaces;
 

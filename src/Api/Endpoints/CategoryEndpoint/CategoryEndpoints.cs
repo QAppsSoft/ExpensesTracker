@@ -1,8 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
-using Api.Endpoints.CategoryEndpoint.DTO;
+using Api.Data.Extensions;
 using Api.Endpoints.CategoryEndpoint.Repository.Interfaces;
-using Api.Models;
-using AutoMapper;
+using Api.Models.Dto.Categories;
 
 namespace Api.Endpoints.CategoryEndpoint;
 
@@ -30,19 +29,20 @@ public static class CategoryEndpoints
 
         group.MapPost("/categories", CreateCategory)
             .WithName("PostCategory")
-            .Accepts<CategoryCreateDto>("application/json")
+            .Accepts<CreateCategoryDto>("application/json")
             .Produces<CategoryDto>(201)
             .Produces(400);
     }
 
-    private static async Task<IResult> GetCategories(ICategoryRepository categoryRepository, IMapper mapper)
+    private static async Task<IResult> GetCategories(ICategoryRepository categoryRepository)
     {
         var categories = await categoryRepository.GetAllAsync().ConfigureAwait(false);
-        var categoriesDto = mapper.Map<ICollection<Category>, ICollection<CategoryDto>>(categories);
+        var categoriesDto = categories.ToCategoryDtos();
+            
         return TypedResults.Ok(categoriesDto);
     }
 
-    private static async Task<IResult> GetCategoryById(ICategoryRepository categoryRepository, IMapper mapper, int id)
+    private static async Task<IResult> GetCategoryById(ICategoryRepository categoryRepository, int id)
     {
         var category = await categoryRepository.GetByIdAsync(id).ConfigureAwait(false);
 
@@ -50,8 +50,8 @@ public static class CategoryEndpoints
         {
             return TypedResults.NotFound();
         }
-        
-        var categoryDto = mapper.Map<CategoryDto>(category);
+
+        var categoryDto = category.ToCategoryDto();
         return TypedResults.Ok(categoryDto);
     }
 
@@ -70,20 +70,19 @@ public static class CategoryEndpoints
         return TypedResults.NoContent();
     }
 
-    private static async Task<IResult> CreateCategory(ICategoryRepository categoryRepository, IMapper mapper,
-        CategoryCreateDto newCategory)
+    private static async Task<IResult> CreateCategory(ICategoryRepository categoryRepository, CreateCategoryDto createCategoryDto)
     {
-        if (await categoryRepository.GetByNameAsync(newCategory.Name).ConfigureAwait(false) != null)
+        if (await categoryRepository.GetByNameAsync(createCategoryDto.Name).ConfigureAwait(false) != null)
         {
             return TypedResults.BadRequest("Coupon Name already Exists");
         }
-        
-        var category = mapper.Map<Category>(newCategory);
+
+        var category = createCategoryDto.ToCategory();
 
         await categoryRepository.CreateAsync(category).ConfigureAwait(false);
         await categoryRepository.SaveChangesAsync().ConfigureAwait(false);
 
-        var categoryDto = mapper.Map<CategoryDto>(category);
+        var categoryDto = category.ToCategoryDto();
 
         return TypedResults.Created($"/api/categories/{categoryDto.Id}", categoryDto);
     }

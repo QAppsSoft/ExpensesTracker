@@ -1,7 +1,6 @@
-using Api.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Api.Data;
+namespace Api.Data.Context;
 
 public class ExpensesTrackerDbContext(DbContextOptions<ExpensesTrackerDbContext> options) : DbContext(options)
 {

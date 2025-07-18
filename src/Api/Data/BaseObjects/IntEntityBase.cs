@@ -1,4 +1,4 @@
-namespace Api.Models.BaseObjects;
+namespace Api.Data.BaseObjects;
 
 public class IntEntityBase : IEntityBase<int>
 {

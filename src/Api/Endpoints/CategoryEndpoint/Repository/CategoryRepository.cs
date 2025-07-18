@@ -1,5 +1,5 @@
 using Api.Data;
-using Api.Models;
+using Api.Data.Context;
 using Api.Endpoints.CategoryEndpoint.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

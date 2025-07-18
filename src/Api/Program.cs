@@ -1,4 +1,4 @@
-using Api.Data;
+using Api.Data.Context;
 using Api.Endpoints.CategoryEndpoint;
 using Api.Endpoints.CategoryEndpoint.Repository;
 using Api.Endpoints.CategoryEndpoint.Repository.Interfaces;
@@ -25,8 +25,6 @@ public static class Program
 
         // Register the CategoryRepository
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-
-        builder.Services.AddAutoMapper(config => config.AddProfile<MappingConfig>());
 
         var app = builder.Build();
 
