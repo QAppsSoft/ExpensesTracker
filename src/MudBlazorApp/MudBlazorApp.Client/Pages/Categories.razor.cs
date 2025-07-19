@@ -150,11 +150,12 @@ public partial class Categories : IDisposable
     {
         try
         {
+            _loading = true;
+
             var result = await _client.GetAsync("api/v1/categories");
             if (result.IsSuccessStatusCode)
             {
                 _categories = await result.Content.ReadFromJsonAsync<List<CategoryDto>>() ?? [];
-                _loading = false;
             }
             else
             {
@@ -166,6 +167,10 @@ public partial class Categories : IDisposable
         catch (Exception)
         {
             Snackbar.Add("Error loading categories. Retry in a few minutes.", Severity.Error);
+        }
+        finally
+        {
+            _loading = false;
         }
     }
 
