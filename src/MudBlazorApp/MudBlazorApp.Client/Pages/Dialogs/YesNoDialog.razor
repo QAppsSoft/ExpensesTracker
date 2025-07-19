@@ -14,13 +14,3 @@
                    OnClick="@YesAction">Yes</MudButton>
     </DialogActions>
 </MudDialog>
-
-@code {
-    [CascadingParameter] IMudDialogInstance MudDialog { get; set; }
-    
-    [Parameter] public string Title { get; set; }
-    [Parameter] public string Message { get; set; }
-    
-    void NoAction() => MudDialog.Close(DialogResult.Ok(false));
-    void YesAction() => MudDialog.Close(DialogResult.Ok(true));
-}

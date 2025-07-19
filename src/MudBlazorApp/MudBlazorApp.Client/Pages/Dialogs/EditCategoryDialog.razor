@@ -1,5 +1,3 @@
-@using Api.Models.Dto.Categories
-
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">Edit category</MudText>
@@ -34,33 +32,3 @@
                    OnClick="@Submit">Submit</MudButton>
     </DialogActions>
 </MudDialog>
-
-@code {
-    [CascadingParameter] IMudDialogInstance MudDialog { get; set; }
-    
-    public string Name { get; set; } = "";
-    public string? Description { get; set; }
-    public string CategoryColor { get; set; } = "";
-    
-    [Parameter] public CategoryDto OldCategory { get; set; }
-
-    protected override void OnInitialized()
-    {
-        Name = OldCategory.Name;
-        Description = OldCategory.Description;
-        CategoryColor = OldCategory.Color;
-    }
-
-    void Cancel() => MudDialog.Cancel();
-
-    void Submit()
-    {
-        if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(CategoryColor))
-        {
-            // Handle validation error
-            return;
-        }
-
-        MudDialog.Close(DialogResult.Ok(new CategoryDto(OldCategory.Id, Name, Description, CategoryColor)));
-    }
-}
