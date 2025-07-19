@@ -14,4 +14,7 @@
       <PackageReference Include="MudBlazor" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Api.Models.Dto\Api.Models.Dto.csproj" />
+    </ItemGroup>    
 </Project>

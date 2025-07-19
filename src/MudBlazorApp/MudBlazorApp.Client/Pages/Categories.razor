@@ -1,38 +1,46 @@
-@page "/Categories"
+@page "/categories"
+@using Api.Models.Dto.Categories
+@using MudBlazorApp.Client.Pages.Components
+
 <h3>Categories</h3>
 
-<MudGrid>
-    <MudItem xs="12" sm="7">
-        <MudPaper Class="pa-4">
-            <MudForm>
-                <MudTextField T="string" Label="Category Name" Required="true" RequiredError="Category Name is required"/>
-                <MudColorPicker Label="Category Color" Required="true" RequiredError="Category Color is required"/>
+@if (preRenderState.IsPreRender)
+{
+    <p><em>Pre-Rendering...</em></p>
+    return;
+}
 
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
-            </MudForm>
-        </MudPaper>
-    </MudItem>
+@if (categories == null)
+{
     
-    <MudItem xs="12" sm="5">
-        <MudPaper Class="pa-4 mud-height-full">
-            <MudDataGrid>
-                <Columns>
-                <PropertyColumn Title="Name"/>
-                <PropertyColumn  Title="Color"/>
-                <TemplateColumn CellClass="d-flex justify-end" Title="Actions">
-                    <CellTemplate>
-                    <MudStack Row>
-                        <MudButton Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">🗑️</MudButton>
-                        <MudButton Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">✏️️</MudButton>
-                    </MudStack>
-                    </CellTemplate>
-                </TemplateColumn>
-                </Columns>
-            </MudDataGrid>
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+}
 
 @code {
+    [CascadingParameter] private PreRenderState preRenderState { get; set; } = new(false);
+    HttpClient client = new() { BaseAddress = new Uri("http://localhost:5079") };
+    List<CategoryDto> categories = [];
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (preRenderState.IsPreRender)
+        {
+            return;
+        }
+
+        try
+        {
+            var result = await client.GetAsync("api/v1/categories");
+            if (result.IsSuccessStatusCode)
+            {
+                categories = await result.Content.ReadFromJsonAsync<List<CategoryDto>>() ?? [];
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
+        await base.OnInitializedAsync();
+    }
 }
