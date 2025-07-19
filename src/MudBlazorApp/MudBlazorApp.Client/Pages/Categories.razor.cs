@@ -38,18 +38,25 @@ public partial class Categories
 
         if (dialogResult is { Canceled: false, Data: CategoryDto updatedCategory })
         {
-            var result = await _client.PutAsJsonAsync($"api/v1/categories/{updatedCategory.Id}", updatedCategory);
-
-            if (result.IsSuccessStatusCode)
+            try
             {
-                var receivedCategory = await result.Content.ReadFromJsonAsync<CategoryDto>();
+                var result = await _client.PutAsJsonAsync($"api/v1/categories/{updatedCategory.Id}", updatedCategory);
 
-                var index = _categories.IndexOf(oldCategory);
-                _categories[index] = receivedCategory;
+                if (result.IsSuccessStatusCode)
+                {
+                    var receivedCategory = await result.Content.ReadFromJsonAsync<CategoryDto>();
 
-                StateHasChanged();
-                
-                Snackbar.Add("Category updated successfully", Severity.Success);
+                    var index = _categories.IndexOf(oldCategory);
+                    _categories[index] = receivedCategory;
+
+                    StateHasChanged();
+
+                    Snackbar.Add("Category updated successfully", Severity.Success);
+                }
+            }
+            catch (Exception)
+            {
+                Snackbar.Add("Error updating category", Severity.Error);
             }
         }
     }
@@ -68,13 +75,20 @@ public partial class Categories
         
         if (dialogResult != null)
         {
-            var result = await _client.DeleteAsync($"api/v1/categories/{category.Id}");
-
-            if (result.IsSuccessStatusCode)
+            try
             {
-                _categories.Remove(category);
-                
-                Snackbar.Add("Category deleted successfully", Severity.Success);
+                var result = await _client.DeleteAsync($"api/v1/categories/{category.Id}");
+
+                if (result.IsSuccessStatusCode)
+                {
+                    _categories.Remove(category);
+
+                    Snackbar.Add("Category deleted successfully", Severity.Success);
+                }
+            }
+            catch (Exception)
+            {
+                Snackbar.Add("Error deleting category", Severity.Error);
             }
         }
     }
@@ -88,17 +102,24 @@ public partial class Categories
         {
             var newItem = dialogResult.Data as CreateCategoryDto;
 
-            var result = await _client.PostAsJsonAsync("api/v1/categories", newItem);
-
-            if (result.IsSuccessStatusCode)
+            try
             {
-                var newCategory = await result.Content.ReadFromJsonAsync<CategoryDto>();
-                if (newCategory != null)
+                var result = await _client.PostAsJsonAsync("api/v1/categories", newItem);
+
+                if (result.IsSuccessStatusCode)
                 {
-                    _categories.Add(newCategory);
+                    var newCategory = await result.Content.ReadFromJsonAsync<CategoryDto>();
+                    if (newCategory != null)
+                    {
+                        _categories.Add(newCategory);
+                    }
+
+                    Snackbar.Add("Category added successfully", Severity.Success);
                 }
-                
-                Snackbar.Add("Category added successfully", Severity.Success);
+            }
+            catch (Exception)
+            {
+                Snackbar.Add("Error adding category", Severity.Error);
             }
         }
     }
