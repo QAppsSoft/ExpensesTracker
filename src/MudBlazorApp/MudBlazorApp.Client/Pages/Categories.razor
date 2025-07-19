@@ -3,9 +3,13 @@
 @using MudBlazorApp.Client.Pages.Components
 @using MudBlazorApp.Client.Pages.Dialogs
 
-<h3>Categories</h3>
+<MudText Typo="Typo.h4" Class="bt-4">Categories</MudText>
 
-<MudDataGrid Items="@_categories" Loading="@_loading" LoadingProgressColor="Color.Info" Hover="true">
+<MudStack Row Justify="Justify.FlexEnd" Class="mt-4">
+    <MudButton OnClick="@OpenAddDialog" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>
+</MudStack>
+
+<MudDataGrid Items="@_categories" Loading="@_loading" LoadingProgressColor="Color.Info" Hover="true" Class="mt-4">
     <NoRecordsContent>
         <MudText Typo="Typo.h6">No categories found</MudText>
         <MudButton Color="Color.Primary" @onclick="OpenAddDialog">Create new category</MudButton>
