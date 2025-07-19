@@ -22,6 +22,7 @@ public partial class Categories
     };
 
     [Inject] private IDialogService DialogService { get; set; } = null!;
+    [Inject] private ISnackbar Snackbar { get; set; } = null!;
 
     private async Task EditCategory(CategoryDto? oldCategory)
     {
@@ -48,6 +49,8 @@ public partial class Categories
                 _categories[index] = receivedCategory;
 
                 StateHasChanged();
+                
+                Snackbar.Add("Category updated successfully", Severity.Success);
             }
         }
     }
@@ -71,6 +74,8 @@ public partial class Categories
             if (result.IsSuccessStatusCode)
             {
                 _categories.Remove(category);
+                
+                Snackbar.Add("Category deleted successfully", Severity.Success);
             }
         }
     }
@@ -89,7 +94,12 @@ public partial class Categories
             if (result.IsSuccessStatusCode)
             {
                 var newCategory = await result.Content.ReadFromJsonAsync<CategoryDto>();
-                if (newCategory != null) _categories.Add(newCategory);
+                if (newCategory != null)
+                {
+                    _categories.Add(newCategory);
+                }
+                
+                Snackbar.Add("Category added successfully", Severity.Success);
             }
         }
     }
@@ -114,11 +124,14 @@ public partial class Categories
                 _categories = await result.Content.ReadFromJsonAsync<List<CategoryDto>>() ?? [];
                 _loading = false;
             }
+            else
+            {
+                Snackbar.Add("Error loading categories. Retry in a few minutes.", Severity.Error);
+            }
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Console.WriteLine(e);
-            throw;
+            Snackbar.Add("Error loading categories. Retry in a few minutes.", Severity.Error);
         }
     }
 }
