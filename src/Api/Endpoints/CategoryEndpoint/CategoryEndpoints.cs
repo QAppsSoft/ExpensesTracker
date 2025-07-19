@@ -32,6 +32,30 @@ public static class CategoryEndpoints
             .Accepts<CreateCategoryDto>("application/json")
             .Produces<CategoryDto>(201)
             .Produces(400);
+        
+        group.MapPut("/categories/{id:int}", UpdateCategory)
+            .WithName("PutCategory")
+            .Accepts<CategoryDto>("application/json")
+            .Produces<CategoryDto>(200)
+            .Produces(400)
+            .Produces(404);
+    }
+
+    private static async Task<IResult> UpdateCategory(ICategoryRepository categoryRepository, int id, CategoryDto categoryDto)
+    {
+        var exist = await categoryRepository.ExistsByIdAsync(id).ConfigureAwait(false);
+
+        if (!exist)
+        {
+            return TypedResults.NotFound($"Category with Id: {categoryDto.Id} not found");
+        }
+        
+        var category = categoryDto.ToCategory();
+        
+        await categoryRepository.UpdateAsync(category).ConfigureAwait(false);
+        await categoryRepository.SaveChangesAsync().ConfigureAwait(false);
+        
+        return TypedResults.Ok(categoryDto);
     }
 
     private static async Task<IResult> GetCategories(ICategoryRepository categoryRepository)

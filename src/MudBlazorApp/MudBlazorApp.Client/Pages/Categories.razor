@@ -54,12 +54,17 @@
 
         if (dialogResult is { Canceled: false, Data: CategoryDto updatedCategory })
         {
-            // TODO: Post changes to API
-
-            var index = _categories.IndexOf(oldCategory);
-            _categories[index] = updatedCategory;
+            var result = await _client.PutAsync($"api/v1/categories/{updatedCategory.Id}", JsonContent.Create(updatedCategory));
             
-            StateHasChanged();
+            if (result.IsSuccessStatusCode)
+            {
+                var receivedCategory = await result.Content.ReadFromJsonAsync<CategoryDto>();
+                
+                var index = _categories.IndexOf(oldCategory);
+                _categories[index] = receivedCategory;
+            
+                StateHasChanged();
+            }
         }
     }
    
