@@ -53,6 +53,10 @@ public partial class Categories
 
                     Snackbar.Add("Category updated successfully", Severity.Success);
                 }
+                else
+                {
+                    Snackbar.Add("Error updating category", Severity.Error);
+                }
             }
             catch (Exception)
             {
@@ -85,6 +89,10 @@ public partial class Categories
 
                     Snackbar.Add("Category deleted successfully", Severity.Success);
                 }
+                else
+                {
+                    Snackbar.Add("Error deleting category", Severity.Error);
+                }
             }
             catch (Exception)
             {
@@ -115,6 +123,10 @@ public partial class Categories
                     }
 
                     Snackbar.Add("Category added successfully", Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add("Error adding category", Severity.Error);
                 }
             }
             catch (Exception)
