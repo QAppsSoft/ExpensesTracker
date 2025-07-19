@@ -38,8 +38,7 @@ public partial class Categories
 
         if (dialogResult is { Canceled: false, Data: CategoryDto updatedCategory })
         {
-            var result = await _client.PutAsync($"api/v1/categories/{updatedCategory.Id}",
-                JsonContent.Create(updatedCategory));
+            var result = await _client.PutAsJsonAsync($"api/v1/categories/{updatedCategory.Id}", updatedCategory);
 
             if (result.IsSuccessStatusCode)
             {
@@ -88,8 +87,8 @@ public partial class Categories
         if (dialogResult is { Canceled: false })
         {
             var newItem = dialogResult.Data as CreateCategoryDto;
-            // Handle the new item (save to database, add to list, etc.)
-            var result = await _client.PostAsync("api/v1/categories", JsonContent.Create(newItem));
+
+            var result = await _client.PostAsJsonAsync("api/v1/categories", newItem);
 
             if (result.IsSuccessStatusCode)
             {
