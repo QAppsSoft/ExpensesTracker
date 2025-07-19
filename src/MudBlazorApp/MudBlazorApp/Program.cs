@@ -1,11 +1,12 @@
+using MudBlazor;
 using MudBlazor.Services;
-using MudBlazorApp.Client.Pages;
 using MudBlazorApp.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add MudBlazor services
-builder.Services.AddMudServices();
+builder.Services.AddMudServices(options =>
+    options.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomCenter);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
