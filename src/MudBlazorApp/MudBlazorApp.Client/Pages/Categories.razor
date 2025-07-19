@@ -6,8 +6,8 @@
 <MudText Typo="Typo.h4" Class="bt-4">Categories</MudText>
 
 <MudStack Row Justify="Justify.FlexEnd" Class="mt-4">
-    <MudButton Icon="@Icons.Material.Filled.Refresh" Variant="Variant.Text" OnClick="@LoadCategories" Color="@Color.Warning">Reload</MudButton>
-    <MudButton OnClick="@OpenAddDialog" Color="@Color.Success" Variant="Variant.Filled">Add Item</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Refresh" Variant="Variant.Text" OnClick="@LoadCategories" Color="@Color.Warning">Reload</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="@OpenAddDialog" Color="@Color.Success" Variant="Variant.Filled">Add Item</MudButton>
 </MudStack>
 
 <MudDataGrid Items="@_categories" Loading="@_loading" LoadingProgressColor="Color.Info" Hover="true" Class="mt-4">

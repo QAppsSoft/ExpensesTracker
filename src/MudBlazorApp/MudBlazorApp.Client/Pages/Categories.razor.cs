@@ -7,7 +7,7 @@ using MudBlazorApp.Client.Pages.Dialogs;
 
 namespace MudBlazorApp.Client.Pages;
 
-public partial class Categories
+public partial class Categories : IDisposable
 {
     [CascadingParameter] private PreRenderState PreRenderState { get; set; } = new(IsPreRender: false);
     private readonly HttpClient _client = new() { BaseAddress = new Uri("http://localhost:5079") };
@@ -167,5 +167,10 @@ public partial class Categories
         {
             Snackbar.Add("Error loading categories. Retry in a few minutes.", Severity.Error);
         }
+    }
+
+    public void Dispose()
+    {
+        _client.Dispose();
     }
 }
