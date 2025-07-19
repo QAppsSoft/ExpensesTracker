@@ -55,7 +55,7 @@ public partial class Categories
                 }
                 else
                 {
-                    Snackbar.Add("Error updating category", Severity.Error);
+                    Snackbar.Add($"Error updating category.\n\nStatus code: {result.StatusCode} \nReason: {result.ReasonPhrase}", Severity.Error);
                 }
             }
             catch (Exception)
@@ -91,7 +91,7 @@ public partial class Categories
                 }
                 else
                 {
-                    Snackbar.Add("Error deleting category", Severity.Error);
+                    Snackbar.Add($"Error deleting category.\n\nStatus code: {result.StatusCode} \nReason: {result.ReasonPhrase}", Severity.Error);
                 }
             }
             catch (Exception)
@@ -126,7 +126,7 @@ public partial class Categories
                 }
                 else
                 {
-                    Snackbar.Add("Error adding category", Severity.Error);
+                    Snackbar.Add($"Error adding category.\n\nStatus code: {result.StatusCode} \nReason: {result.ReasonPhrase}", Severity.Error);
                 }
             }
             catch (Exception)
@@ -158,7 +158,9 @@ public partial class Categories
             }
             else
             {
-                Snackbar.Add("Error loading categories. Retry in a few minutes.", Severity.Error);
+                Snackbar.Add(
+                    $"Error loading categories. Retry in a few minutes.\n\nStatus code: {result.StatusCode} \nReason: {result.ReasonPhrase}",
+                    Severity.Error);
             }
         }
         catch (Exception)
