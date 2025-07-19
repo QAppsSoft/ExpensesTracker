@@ -6,18 +6,22 @@
     </TitleContent>
 
     <DialogContent>
+        
         <MudTextField @bind-Value="Name"
                       Label="Name"
                       Required="true"
-                      RequiredError="Name is required"/>
+                      RequiredError="Name is required"
+                      Class="pt-4"/>
 
         <MudTextField @bind-Value="Description"
-                      Label="Description"/>
+                      Label="Description"
+                      Class="pt-4"/>
 
         <MudTextField @bind-Value="CategoryColor"
                       Label="Color"
                       Required="true"
-                      RequiredError="Color is required"/>
+                      RequiredError="Color is required"
+                      Class="pt-4"/>
 
     </DialogContent>
 
