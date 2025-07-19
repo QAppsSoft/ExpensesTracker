@@ -6,7 +6,8 @@
 <MudText Typo="Typo.h4" Class="bt-4">Categories</MudText>
 
 <MudStack Row Justify="Justify.FlexEnd" Class="mt-4">
-    <MudButton OnClick="@OpenAddDialog" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>
+    <MudButton Icon="@Icons.Material.Filled.Refresh" Variant="Variant.Text" OnClick="@LoadCategories" Color="@Color.Warning">Reload</MudButton>
+    <MudButton OnClick="@OpenAddDialog" Color="@Color.Success" Variant="Variant.Filled">Add Item</MudButton>
 </MudStack>
 
 <MudDataGrid Items="@_categories" Loading="@_loading" LoadingProgressColor="Color.Info" Hover="true" Class="mt-4">
@@ -125,6 +126,11 @@
             return;
         }
 
+        await LoadCategories();
+    }
+
+    private async Task LoadCategories()
+    {
         try
         {
             var result = await _client.GetAsync("api/v1/categories");
@@ -139,7 +145,5 @@
             Console.WriteLine(e);
             throw;
         }
-
-        await base.OnInitializedAsync();
     }
 }
