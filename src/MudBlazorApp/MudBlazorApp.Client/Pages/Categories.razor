@@ -17,7 +17,7 @@
         <TemplateColumn CellClass="d-flex justify-end">
             <CellTemplate Context="cellContext">
                 <MudStack Row>
-                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info"/>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info" @onclick="() => EditCategory(cellContext.Item)"/>
                     <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="() => DeleteCategory(cellContext.Item)"/>
                 </MudStack>
             </CellTemplate>
@@ -29,10 +29,43 @@
     [CascadingParameter] private PreRenderState PreRenderState { get; set; } = new(false);
     readonly HttpClient _client = new() { BaseAddress = new Uri("http://localhost:5079") };
     List<CategoryDto> _categories = [];
-    [Inject] IDialogService DialogService { get; set; } = null!;
-
+    
     private bool _loading = true;
+    private readonly DialogOptions _dialogOptions = new()
+    {
+        CloseOnEscapeKey = true,
+        FullWidth = true,
+        MaxWidth = MaxWidth.Small
+    };
+    
+    [Inject] IDialogService DialogService { get; set; } = null!;
+    
+    private async Task EditCategory(CategoryDto? category)
+    {
+        if (category == null)
+        {
+            return;
+        }
 
+        var parameters = new DialogParameters<EditCategoryDialog>
+        {
+            { x => x.Name, category.Name },
+            { x => x.Description, category.Description },
+            { x => x.CategoryColor, category.Color }
+        };
+
+        var dialog = await DialogService.ShowAsync<EditCategoryDialog>("Edit category", parameters, _dialogOptions);
+        var dialogResult = await dialog.Result;
+
+        if (dialogResult is { Canceled: false, Data: CategoryDto updatedCategory })
+        {
+            // TODO: Post changes to API
+
+            var index = _categories.IndexOf(category);
+            _categories[index] = updatedCategory;
+        }
+    }
+   
     private async Task DeleteCategory(CategoryDto? category)
     {
         if (category == null)
@@ -50,14 +83,7 @@
 
     private async Task OpenAddDialog()
     {
-        var options = new DialogOptions
-        {
-            CloseOnEscapeKey = true,
-            FullWidth = true,
-            MaxWidth = MaxWidth.Small
-        };
-
-        var dialog = await DialogService.ShowAsync<AddCategoryDialog>("Add new category", options);
+        var dialog = await DialogService.ShowAsync<AddCategoryDialog>("Add new category", _dialogOptions);
         var dialogResult = await dialog.Result;
 
         if (dialogResult is { Canceled: false })
