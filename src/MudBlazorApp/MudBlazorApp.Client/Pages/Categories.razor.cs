@@ -58,17 +58,13 @@ public partial class Categories
         {
             return;
         }
-
-        var parameters = new DialogParameters<YesNoDialog>
-        {
-            { x => x.Title, "Delete category" },
-            { x => x.Message, $"Are you sure you want to delete category \"{category.Name}\"?" }
-        };
-
-        var dialog = await DialogService.ShowAsync<YesNoDialog>("Delete category", parameters, _dialogOptions);
-        var dialogResult = await dialog.Result;
-
-        if (dialogResult is { Data: true })
+        
+        var dialogResult = await DialogService.ShowMessageBox(
+            "Delete category",
+            $"Are you sure you want to delete category \"{category.Name}\"?", 
+            yesText:"Delete!", cancelText:"Cancel");
+        
+        if (dialogResult != null)
         {
             var result = await _client.DeleteAsync($"api/v1/categories/{category.Id}");
 
