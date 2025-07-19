@@ -1,38 +1,93 @@
 @page "/categories"
 @using Api.Models.Dto.Categories
 @using MudBlazorApp.Client.Pages.Components
+@using MudBlazorApp.Client.Pages.Dialogs
 
 <h3>Categories</h3>
 
-@if (preRenderState.IsPreRender)
-{
-    <p><em>Pre-Rendering...</em></p>
-    return;
-}
-
-@if (categories == null)
-{
-    
-}
+<MudDataGrid Items="@_categories" Loading="@_loading" LoadingProgressColor="Color.Info" Hover="true">
+    <NoRecordsContent>
+        <MudText Typo="Typo.h6">No categories found</MudText>
+        <MudButton Color="Color.Primary" @onclick="OpenAddDialog">Create new category</MudButton>
+    </NoRecordsContent>
+    <Columns>
+        <PropertyColumn Property="x => x.Name"/>
+        <PropertyColumn Property="x => x.Description"/>
+        <PropertyColumn Property="x => x.Color"/>
+        <TemplateColumn CellClass="d-flex justify-end">
+            <CellTemplate Context="cellContext">
+                <MudStack Row>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info"/>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="() => DeleteCategory(cellContext.Item)"/>
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudDataGrid>
 
 @code {
-    [CascadingParameter] private PreRenderState preRenderState { get; set; } = new(false);
-    HttpClient client = new() { BaseAddress = new Uri("http://localhost:5079") };
-    List<CategoryDto> categories = [];
+    [CascadingParameter] private PreRenderState PreRenderState { get; set; } = new(false);
+    readonly HttpClient _client = new() { BaseAddress = new Uri("http://localhost:5079") };
+    List<CategoryDto> _categories = [];
+    [Inject] IDialogService DialogService { get; set; } = null!;
+
+    private bool _loading = true;
+
+    private async Task DeleteCategory(CategoryDto? category)
+    {
+        if (category == null)
+        {
+            return;
+        }
+        
+        var result = await _client.DeleteAsync($"api/v1/categories/{category.Id}");
+
+        if (result.IsSuccessStatusCode)
+        {
+            _categories.Remove(category);
+        }
+    }
+
+    private async Task OpenAddDialog()
+    {
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            FullWidth = true,
+            MaxWidth = MaxWidth.Small
+        };
+
+        var dialog = await DialogService.ShowAsync<AddCategoryDialog>("Add new category", options);
+        var dialogResult = await dialog.Result;
+
+        if (dialogResult is { Canceled: false })
+        {
+            var newItem = dialogResult.Data as CreateCategoryDto;
+            // Handle the new item (save to database, add to list, etc.)
+            var result = await _client.PostAsync("api/v1/categories", JsonContent.Create(newItem));
+
+            if (result.IsSuccessStatusCode)
+            {
+                var newCategory = await result.Content.ReadFromJsonAsync<CategoryDto>();
+                if (newCategory != null) _categories.Add(newCategory);
+            }
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        if (preRenderState.IsPreRender)
+        if (PreRenderState.IsPreRender)
         {
             return;
         }
 
         try
         {
-            var result = await client.GetAsync("api/v1/categories");
+            var result = await _client.GetAsync("api/v1/categories");
             if (result.IsSuccessStatusCode)
             {
-                categories = await result.Content.ReadFromJsonAsync<List<CategoryDto>>() ?? [];
+                _categories = await result.Content.ReadFromJsonAsync<List<CategoryDto>>() ?? [];
+                _loading = false;
             }
         }
         catch (Exception e)
@@ -40,7 +95,7 @@
             Console.WriteLine(e);
             throw;
         }
-        
+
         await base.OnInitializedAsync();
     }
 }
