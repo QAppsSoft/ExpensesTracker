@@ -33,11 +33,20 @@
 
 @code {
     [CascadingParameter] IMudDialogInstance MudDialog { get; set; }
-
-    [Parameter] public string Name { get; set; } = "";
-    [Parameter] public string Description { get; set; } = "";
-    [Parameter] public string CategoryColor { get; set; } = "";
     
+    public string Name { get; set; } = "";
+    public string? Description { get; set; }
+    public string CategoryColor { get; set; } = "";
+    
+    [Parameter] public CategoryDto OldCategory { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Name = OldCategory.Name;
+        Description = OldCategory.Description;
+        CategoryColor = OldCategory.Color;
+    }
+
     void Cancel() => MudDialog.Cancel();
 
     void Submit()
@@ -48,6 +57,6 @@
             return;
         }
 
-        MudDialog.Close(DialogResult.Ok(new CreateCategoryDto(Name, Description, CategoryColor)));
+        MudDialog.Close(DialogResult.Ok(new CategoryDto(OldCategory.Id, Name, Description, CategoryColor)));
     }
 }
