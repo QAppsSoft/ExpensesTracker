@@ -40,10 +40,15 @@ public class CategoryRepository(ExpensesTrackerDbContext context) : ICategoryRep
         return Task.CompletedTask;
     }
 
-    public Task UpdateAsync(Category category)
+    public async Task UpdateAsync(Category updatedCategory)
     {
-        context.Categories.Update(category);
-        return Task.CompletedTask;
+        var exist = await ExistsByIdAsync(updatedCategory.Id).ConfigureAwait(false);
+        if (!exist)
+        {
+            throw new InvalidOperationException($"Category with ID {updatedCategory.Id} not found.");
+        }
+        
+        context.Categories.Update(updatedCategory);
     }
 
     public async Task SaveChangesAsync()
