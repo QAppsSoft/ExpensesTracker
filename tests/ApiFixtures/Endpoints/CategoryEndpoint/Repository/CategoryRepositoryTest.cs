@@ -149,4 +149,60 @@ public class CategoryRepositoryTests
         // Assert
         _context.Categories.Should().Contain(newCategory);
     }
+
+    [Test]
+    public async Task UpdateAsync_ExistingCategory_UpdatesCategoryInDatabase()
+    {
+        // Arrange
+        var categoryToUpdate = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Food");
+        categoryToUpdate.Name = "UpdatedFood";
+        categoryToUpdate.Description = "Updated description";
+        categoryToUpdate.Color = "#00FF00";
+
+        // Act
+        await _categoryRepository.UpdateAsync(categoryToUpdate);
+        await _context.SaveChangesAsync();
+
+        // Assert
+        var updatedCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "UpdatedFood");
+        updatedCategory.Should().NotBeNull();
+        updatedCategory.Description.Should().Be("Updated description");
+    }
+
+    [Test]
+    public async Task UpdateAsync_NonExistingCategory_ThrowsException()
+    {
+        // Arrange
+        var nonExistingCategory = new Category { Id = 999, Name = "NonExisting", Color = "#FFFFFF" };
+
+        // Act
+        Func<Task> act = async () => await _categoryRepository.UpdateAsync(nonExistingCategory);
+        
+        // Assert
+        await act.Should().ThrowAsync<InvalidOperationException>()
+            .WithMessage($"Category with ID {nonExistingCategory.Id} not found.");
+    }
+
+    [Test]
+    public async Task ExistsByIdAsync_ExistingCategory_ShouldReturnTrue()
+    {
+        // Arrange
+        var category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Food");
+        
+        // Act
+        var exists = await _categoryRepository.ExistsByIdAsync(category.Id);
+        
+        // Assert
+        exists.Should().BeTrue();
+    }
+    
+    [Test]
+    public async Task ExistsByIdAsync_NonExistingCategory_ShouldReturnFalse()
+    {
+        // Act
+        var exists = await _categoryRepository.ExistsByIdAsync(999);
+        
+        // Assert
+        exists.Should().BeFalse();
+    }
 }

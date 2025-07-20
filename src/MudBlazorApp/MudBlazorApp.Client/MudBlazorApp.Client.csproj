@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+        <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
+      <PackageReference Include="MudBlazor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Api.Models.Dto\Api.Models.Dto.csproj" />
+    </ItemGroup>    
+</Project>

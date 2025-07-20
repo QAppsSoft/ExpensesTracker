@@ -1,0 +1,31 @@
+@page "/categories"
+@using Api.Models.Dto.Categories
+@using MudBlazorApp.Client.Pages.Components
+@using MudBlazorApp.Client.Pages.Dialogs
+
+<MudText Typo="Typo.h4" Class="bt-4">Categories</MudText>
+
+<MudStack Row Justify="Justify.FlexEnd" Class="mt-4">
+    <MudButton StartIcon="@Icons.Material.Filled.Refresh" Variant="Variant.Text" OnClick="@LoadCategories" Color="@Color.Warning">Reload</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="@OpenAddDialog" Color="@Color.Success" Variant="Variant.Filled">Add Item</MudButton>
+</MudStack>
+
+<MudDataGrid Items="@_categories" Loading="@_loading" LoadingProgressColor="Color.Info" Hover="true" Class="mt-4">
+    <NoRecordsContent>
+        <MudText Typo="Typo.h6">No categories found</MudText>
+        <MudButton Color="Color.Primary" @onclick="OpenAddDialog">Create new category</MudButton>
+    </NoRecordsContent>
+    <Columns>
+        <PropertyColumn Property="x => x.Name"/>
+        <PropertyColumn Property="x => x.Description"/>
+        <PropertyColumn Property="x => x.Color"/>
+        <TemplateColumn CellClass="d-flex justify-end">
+            <CellTemplate Context="cellContext">
+                <MudStack Row>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info" @onclick="() => EditCategory(cellContext.Item)"/>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="() => DeleteCategory(cellContext.Item)"/>
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudDataGrid>

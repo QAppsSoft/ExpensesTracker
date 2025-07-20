@@ -1,0 +1,17 @@
+@using Microsoft.AspNetCore.Http
+
+<CascadingValue Value="preRenderState" IsFixed>
+    @ChildContent
+</CascadingValue>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [CascadingParameter] HttpContext? HttpContext { get; set; }
+
+    private PreRenderState preRenderState = new(false);
+
+    protected override void OnInitialized()
+    {
+        preRenderState = new PreRenderState(HttpContext is not null);
+    }
+}

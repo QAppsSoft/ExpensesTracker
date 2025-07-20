@@ -26,8 +26,22 @@ public static class Program
         // Register the CategoryRepository
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
-        var app = builder.Build();
+        builder.Services.AddCors(options =>
+            options.AddPolicy("AllowAll", policy =>
+                policy.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+            ));
 
+        var app = builder.Build();
+        
+        app.UseCors("AllowAll");
+        
+        // Ensure the database is created
+        using var scope = app.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ExpensesTrackerDbContext>();
+        dbContext.Database.EnsureCreated();
+        
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {

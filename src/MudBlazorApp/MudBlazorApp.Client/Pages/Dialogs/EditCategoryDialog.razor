@@ -1,0 +1,34 @@
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">Edit category</MudText>
+    </TitleContent>
+
+    <DialogContent>
+        
+        <MudTextField @bind-Value="Name"
+                      Label="Name"
+                      Required="true"
+                      RequiredError="Name is required"
+                      Class="pt-4"/>
+
+        <MudTextField @bind-Value="Description"
+                      Label="Description"
+                      Class="pt-4"/>
+
+        <MudTextField @bind-Value="CategoryColor"
+                      Label="Color"
+                      Required="true"
+                      RequiredError="Color is required"
+                      Class="pt-4"/>
+
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Variant="Variant.Text" 
+                   Color="Color.Secondary" 
+                   OnClick="@Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" 
+                   Color="Color.Secondary" 
+                   OnClick="@Submit">Submit</MudButton>
+    </DialogActions>
+</MudDialog>

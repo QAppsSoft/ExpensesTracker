@@ -7,6 +7,11 @@ namespace Api.Endpoints.CategoryEndpoint.Repository;
 
 public class CategoryRepository(ExpensesTrackerDbContext context) : ICategoryRepository
 {
+    public Task<bool> ExistsByIdAsync(int id)
+    {
+        return context.Categories.AnyAsync(c => c.Id == id);
+    }
+
     public async Task<ICollection<Category>> GetAllAsync()
     {
         return await context.Categories.ToListAsync().ConfigureAwait(false);
@@ -33,6 +38,17 @@ public class CategoryRepository(ExpensesTrackerDbContext context) : ICategoryRep
     {
         context.Categories.Remove(category);
         return Task.CompletedTask;
+    }
+
+    public async Task UpdateAsync(Category updatedCategory)
+    {
+        var exist = await ExistsByIdAsync(updatedCategory.Id).ConfigureAwait(false);
+        if (!exist)
+        {
+            throw new InvalidOperationException($"Category with ID {updatedCategory.Id} not found.");
+        }
+        
+        context.Categories.Update(updatedCategory);
     }
 
     public async Task SaveChangesAsync()
