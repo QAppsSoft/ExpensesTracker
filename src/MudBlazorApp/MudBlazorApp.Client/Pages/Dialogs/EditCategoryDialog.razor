@@ -15,11 +15,15 @@
                       Label="Description"
                       Class="pt-4"/>
 
-        <MudTextField @bind-Value="CategoryColor"
-                      Label="Color"
-                      Required="true"
-                      RequiredError="Color is required"
-                      Class="pt-4"/>
+        <MudColorPicker @bind-Text="CategoryColor"
+                        ShowAlpha="false"
+                        Label="Color"
+                        Required="true"
+                        RequiredError="Color is required"
+                        ColorPickerView="ColorPickerView.GridCompact"/>
+
+        <div class="mud-width-full rounded py-4" style="@($"background-color:{CategoryColor};")" ></div>
+
 
     </DialogContent>
 

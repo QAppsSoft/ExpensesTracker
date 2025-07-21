@@ -16,9 +16,13 @@
         <MudButton Color="Color.Primary" @onclick="OpenAddDialog">Create new category</MudButton>
     </NoRecordsContent>
     <Columns>
-        <PropertyColumn Property="x => x.Name"/>
-        <PropertyColumn Property="x => x.Description"/>
-        <PropertyColumn Property="x => x.Color"/>
+        <PropertyColumn Title="Name" Property="x => x.Name"/>
+        <PropertyColumn Title="Description" Property="x => x.Description"/>
+        <TemplateColumn Title="Color" >
+            <CellTemplate Context="cellContext">
+                <MudPaper Class="pa-4" Style="@($"background-color:{cellContext.Item?.Color};")"></MudPaper>
+            </CellTemplate>
+        </TemplateColumn>
         <TemplateColumn CellClass="d-flex justify-end">
             <CellTemplate Context="cellContext">
                 <MudStack Row>
