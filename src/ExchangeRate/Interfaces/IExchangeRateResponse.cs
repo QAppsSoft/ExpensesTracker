@@ -16,5 +16,5 @@ public interface IExchangeRateResponse
     ///     Parses and returns the exchange rates for each currency as a dictionary where keys are currency codes and values
     ///     are exchange rates.
     /// </summary>
-    IDictionary<string, double> Rates { get; init; }
+    IDictionary<string, decimal> Rates { get; }
 }

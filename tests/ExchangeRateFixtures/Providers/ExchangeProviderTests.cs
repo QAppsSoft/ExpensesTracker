@@ -39,8 +39,8 @@ namespace ExchangeRateFixtures.Providers
             // Arrange
             var expectedRates = new List<CurrencyPairRate>
             {
-                new("USD", "EUR", 0.85, DateTime.UtcNow),
-                new("USD", "GBP", 0.75, DateTime.UtcNow)
+                new("USD", "EUR", 0.85m, DateTime.UtcNow),
+                new("USD", "GBP", 0.75m, DateTime.UtcNow)
             };
             _mockProvider1.Setup(p => p.GetRatesAsync("USD")).ReturnsAsync(expectedRates);
 
@@ -59,8 +59,8 @@ namespace ExchangeRateFixtures.Providers
             // Arrange
             var expectedRates = new List<CurrencyPairRate>
             {
-                new("USD", "EUR", 0.85, DateTime.UtcNow),
-                new("USD", "GBP", 0.75, DateTime.UtcNow)
+                new("USD", "EUR", 0.85m, DateTime.UtcNow),
+                new("USD", "GBP", 0.75m, DateTime.UtcNow)
             };
             _mockProvider2.Setup(p => p.GetRatesAsync("USD")).ReturnsAsync(expectedRates);
 

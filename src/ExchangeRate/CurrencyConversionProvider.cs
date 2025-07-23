@@ -6,7 +6,7 @@ namespace ExchangeRate;
 
 public class CurrencyConversionProvider(IExchangeProvider exchangeProvider, ICurrencyCache currencyCache)
 {
-    public async Task<double> ConvertAsync(double amount, string fromCurrency, string toCurrency)
+    public async Task<decimal> ConvertAsync(decimal amount, string fromCurrency, string toCurrency)
     {
         // Check if the currency rate is already cached and return the result if it is.
         var cached = currencyCache.LoadFromCurrencyCache(fromCurrency, toCurrency);

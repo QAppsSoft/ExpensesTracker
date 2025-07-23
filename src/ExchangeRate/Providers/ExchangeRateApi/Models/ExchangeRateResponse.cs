@@ -17,7 +17,7 @@ public record ExchangeRateResponse(
     string TimeNextUpdateUtc,
     int TimeEolUnix,
     string BaseCode,
-    IDictionary<string, double> Rates) : IExchangeRateResponse
+    IDictionary<string, decimal> Rates) : IExchangeRateResponse
 {
     /// <summary>
     ///     Parses and returns the last update time in UTC as a <see cref="DateTime"/> object.
