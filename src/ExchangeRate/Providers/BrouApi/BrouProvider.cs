@@ -15,7 +15,7 @@ public class BrouProvider : ProviderBase
     {
         try
         {
-            var response = await HttpClient.GetAsync($"{BaseUrl}{baseCurrency}").ConfigureAwait(false);
+            var response = await HttpClient.GetAsync(BaseUrl).ConfigureAwait(false);
             
             if (!response.IsSuccessStatusCode)
             {
