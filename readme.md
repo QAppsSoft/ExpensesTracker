@@ -28,6 +28,7 @@ A simple expense tracker for monitoring and managing financial expenditures
   - [x] Use different exchange providers
     - [x] https://www.exchangerate-api.com/
     - [x] https://openexchangerates.org
+    - [x] https://github.com/AFornio/UruguayAPI
 - [ ] Implement API
   - [ ] Implement exchange rate endpoint
 - [ ] More to come
