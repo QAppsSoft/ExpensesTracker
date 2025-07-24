@@ -28,7 +28,7 @@ public class CurrencyConversionProviderTest
         // Arrange
         var rates = new List<CurrencyPairRate>
         {
-            new("USD", "EUR", 0.85, DateTime.UtcNow)
+            new("USD", "EUR", 0.85m, DateTime.UtcNow)
         };
         _mockExchangeProvider.Setup(p => p.GetRatesAsync("USD")).ReturnsAsync(rates);
 
@@ -46,7 +46,7 @@ public class CurrencyConversionProviderTest
         // Arrange
         var rates = new List<CurrencyPairRate>
         {
-            new("USD", "GBP", 0.75, DateTime.UtcNow)
+            new("USD", "GBP", 0.75m, DateTime.UtcNow)
         };
         _mockExchangeProvider.Setup(p => p.GetRatesAsync("USD")).ReturnsAsync(rates);
 
@@ -79,7 +79,7 @@ public class CurrencyConversionProviderTest
     public async Task ConvertAsync_WithCachedData_ReturnsConvertedAmount()
     {
         // Arrange
-        var cachedRate = new CurrencyPairRate("USD", "EUR", 0.85, DateTime.UtcNow);
+        var cachedRate = new CurrencyPairRate("USD", "EUR", 0.85m, DateTime.UtcNow);
         _mockCurrencyCache.Setup(c => c.LoadFromCurrencyCache("USD", "EUR")).Returns(cachedRate);
 
         // Act
@@ -97,7 +97,7 @@ public class CurrencyConversionProviderTest
         // Arrange
         var rates = new List<CurrencyPairRate>
         {
-            new("USD", "EUR", 0.85, DateTime.UtcNow)
+            new("USD", "EUR", 0.85m, DateTime.UtcNow)
         };
         _mockCurrencyCache.Setup(c => c.LoadFromCurrencyCache("USD", "EUR")).Returns((CurrencyPairRate)null);
         _mockExchangeProvider.Setup(p => p.GetRatesAsync("USD")).ReturnsAsync(rates);
@@ -118,7 +118,7 @@ public class CurrencyConversionProviderTest
         // Arrange
         var rates = new List<CurrencyPairRate>
         {
-            new("USD", "GBP", 0.75, DateTime.UtcNow)
+            new("USD", "GBP", 0.75m, DateTime.UtcNow)
         };
         _mockCurrencyCache.Setup(c => c.LoadFromCurrencyCache("USD", "EUR")).Returns((CurrencyPairRate)null);
         _mockExchangeProvider.Setup(p => p.GetRatesAsync("USD")).ReturnsAsync(rates);

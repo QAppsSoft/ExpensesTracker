@@ -53,7 +53,7 @@ namespace ExchangeRateFixtures.Cache
         public void Constructor_WhenCacheFileExists_LoadsExistingData()
         {
             // Arrange
-            var testData = new CurrencyPairRate[] { new("USD", "EUR", 0.85f, DateTime.Now) };
+            var testData = new CurrencyPairRate[] { new("USD", "EUR", 0.85m, DateTime.Now) };
 
             var serializedData = JsonSerializer.Serialize(testData);
             File.WriteAllText(_testCachePath, serializedData);
@@ -66,14 +66,14 @@ namespace ExchangeRateFixtures.Cache
             cachedItem.Should().NotBeNull();
             cachedItem.FromCurrency.Should().Be("USD");
             cachedItem.ToCurrency.Should().Be("EUR");
-            cachedItem.Rate.Should().Be(0.85f);
+            cachedItem.Rate.Should().Be(0.85m);
         }
 
         [Test]
         public void SaveToCacheData_WithSingleNewItem_AddsItemToCache()
         {
             // Arrange
-            var testData = new CurrencyPairRate("USD", "EUR", 0.85f, DateTime.Now);
+            var testData = new CurrencyPairRate("USD", "EUR", 0.85m, DateTime.Now);
 
             // Act
             _currencyCache.SaveToCurrencyCache(testData);
@@ -83,7 +83,7 @@ namespace ExchangeRateFixtures.Cache
             cachedItem.Should().NotBeNull();
             cachedItem.FromCurrency.Should().Be("USD");
             cachedItem.ToCurrency.Should().Be("EUR");
-            cachedItem.Rate.Should().Be(0.85f);
+            cachedItem.Rate.Should().Be(0.85m);
 
             // Verify only one item exists in cache
             var fileContent = File.ReadAllText(_testCachePath);
@@ -95,10 +95,10 @@ namespace ExchangeRateFixtures.Cache
         public void SaveToCacheData_WithExistingItem_UpdatesItemInCache()
         {
             // Arrange
-            var initialData = new CurrencyPairRate("USD", "EUR", 0.85f, DateTime.Now);
+            var initialData = new CurrencyPairRate("USD", "EUR", 0.85m, DateTime.Now);
             _currencyCache.SaveToCurrencyCache(initialData);
 
-            var updatedData = new CurrencyPairRate("USD", "EUR", 0.86f, DateTime.Now);
+            var updatedData = new CurrencyPairRate("USD", "EUR", 0.86m, DateTime.Now);
 
             // Act
             _currencyCache.SaveToCurrencyCache(updatedData);
@@ -108,7 +108,7 @@ namespace ExchangeRateFixtures.Cache
             cachedItem.Should().NotBeNull();
             cachedItem.FromCurrency.Should().Be("USD");
             cachedItem.ToCurrency.Should().Be("EUR");
-            cachedItem.Rate.Should().Be(0.86f);
+            cachedItem.Rate.Should().Be(0.86m);
 
             // Verify file was updated
             var fileContent = File.ReadAllText(_testCachePath);
@@ -120,20 +120,20 @@ namespace ExchangeRateFixtures.Cache
         public void SaveToCacheData_WithMultipleItems_AddsOrUpdatesAllItems()
         {
             // Arrange
-            var initialData = new CurrencyPairRate("USD", "EUR", 0.85f, DateTime.Now);
+            var initialData = new CurrencyPairRate("USD", "EUR", 0.85m, DateTime.Now);
             _currencyCache.SaveToCurrencyCache(initialData);
 
             var testData = new List<CurrencyPairRate>
             {
-                new("USD", "EUR", 0.86f, DateTime.Now),
-                new("EUR", "GBP", 0.90f, DateTime.Now)
+                new("USD", "EUR", 0.86m, DateTime.Now),
+                new("EUR", "GBP", 0.90m, DateTime.Now)
             };
 
             // Act
             _currencyCache.SaveToCurrencyCache(testData);
 
             // Assert
-            _currencyCache.LoadFromCurrencyCache("USD", "EUR").Rate.Should().Be(0.86f);
+            _currencyCache.LoadFromCurrencyCache("USD", "EUR").Rate.Should().Be(0.86m);
             _currencyCache.LoadFromCurrencyCache("EUR", "GBP").Should().NotBeNull();
 
             // Verify file contains both items
@@ -158,8 +158,8 @@ namespace ExchangeRateFixtures.Cache
             // Arrange
             var testData = new List<CurrencyPairRate>
             {
-                new("USD", "EUR", 0.85f, DateTime.Now),
-                new("EUR", "GBP", 0.90f, DateTime.Now)
+                new("USD", "EUR", 0.85m, DateTime.Now),
+                new("EUR", "GBP", 0.90m, DateTime.Now)
             };
             _currencyCache.SaveToCurrencyCache(testData);
 
@@ -179,9 +179,9 @@ namespace ExchangeRateFixtures.Cache
         [Test]
         public void ResetCache_WithOnlyExpiredSetTrue_ClearsOnlyExpiredCacheData()
         {
-            var convData1 = new CurrencyPairRate("USD", "EUR", 0.85f,
+            var convData1 = new CurrencyPairRate("USD", "EUR", 0.85m,
                 DateTime.Now - CurrencyCache.CacheDuration.Add(TimeSpan.FromHours(1)));
-            var convData2 = new CurrencyPairRate("EUR", "GBP", 0.90f,
+            var convData2 = new CurrencyPairRate("EUR", "GBP", 0.90m,
                 DateTime.Now - CurrencyCache.CacheDuration.Add(TimeSpan.FromHours(-1)));
 
             // Arrange

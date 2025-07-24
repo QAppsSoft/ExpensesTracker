@@ -15,7 +15,7 @@ public record OpenExchangeRatesResponse(
     string License,
     int Timestamp,
     string Base,
-    IDictionary<string, double> Rates) : IExchangeRateResponse
+    IDictionary<string, decimal> Rates) : IExchangeRateResponse
 {
     /// <summary>The timestamp of the response.</summary>
     public int Timestamp { get; init; } = Timestamp;

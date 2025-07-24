@@ -71,8 +71,8 @@ public class CacheStorageTests
         // Arrange
         var testData = new List<CurrencyPairRate>
         {
-            new("USD","EUR", 0.86f, DateTime.Now),
-            new("EUR","GBP", 0.90f, DateTime.Now)
+            new("USD","EUR", 0.86m, DateTime.Now),
+            new("EUR","GBP", 0.90m, DateTime.Now)
         };
 
         // Act
@@ -90,8 +90,8 @@ public class CacheStorageTests
     public void Save_ShouldOverwriteExistingFile_WhenItExists()
     {
         // Arrange
-        var initialData = new List<CurrencyPairRate> { new("USD", "EUR", 0.86f, DateTime.Now) };
-        var updatedData = new List<CurrencyPairRate> { new("EUR", "GBP", 0.90f, DateTime.Now) };
+        var initialData = new List<CurrencyPairRate> { new("USD", "EUR", 0.86m, DateTime.Now) };
+        var updatedData = new List<CurrencyPairRate> { new("EUR", "GBP", 0.90m, DateTime.Now) };
 
         // Act
         _cacheStorage.Save(initialData);
@@ -119,8 +119,8 @@ public class CacheStorageTests
         // Arrange
         var testData = new List<CurrencyPairRate>
         {
-            new("USD","EUR", 0.86f, DateTime.Now),
-            new("EUR","GBP", 0.90f, DateTime.Now)
+            new("USD","EUR", 0.86m, DateTime.Now),
+            new("EUR","GBP", 0.90m, DateTime.Now)
         };
 
         _cacheStorage.Save(testData);
@@ -148,7 +148,7 @@ public class CacheStorageTests
         // Arrange
         var testData = new List<CurrencyPairRate>
         {
-            new("USD","EUR", 0.86f, DateTime.Now)
+            new("USD","EUR", 0.86m, DateTime.Now)
         };
 
         _cacheStorage.Save(testData);
@@ -169,7 +169,7 @@ public class CacheStorageTests
         // Save and verify
         var testData = new List<CurrencyPairRate>
         {
-            new("USD","EUR", 0.8f, DateTime.Now)
+            new("USD","EUR", 0.8m, DateTime.Now)
         };
         _cacheStorage.Save(testData);
         _cacheStorage.Load().Should().BeEquivalentTo(testData);
@@ -181,7 +181,7 @@ public class CacheStorageTests
         // Save again and verify
         var newTestData = new List<CurrencyPairRate>
         {
-            new("EUR","GBP", 0.90f, DateTime.Now)
+            new("EUR","GBP", 0.90m, DateTime.Now)
         };
         _cacheStorage.Save(newTestData);
         _cacheStorage.Load().Should().BeEquivalentTo(newTestData);
