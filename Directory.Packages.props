@@ -36,7 +36,7 @@
     </PackageVersion>
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="NUnit" Version="4.4.0" />
-    <PackageVersion Include="NUnit.Analyzers" Version="4.11.1">
+    <PackageVersion Include="NUnit.Analyzers" Version="4.11.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
