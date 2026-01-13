@@ -19,7 +19,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.12.4" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.12.5" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.18.0.131500">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
