@@ -1,10 +1,10 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0@sha256:3760f76b46d7ec683786c1e653c29b1ef4bc959ef965520b814de555d26e38fe AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0@sha256:7799364313c08f464193c93a9db935d86697b2b25c96c89fb2b629bbf9877016 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0@sha256:13bd3b19e637289720c0ac75d08f0aefa6a4dd933b27a61c2289fd3d26330f34 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0@sha256:e04aef5e32fe25cea4641ecd2f2d8d7eca009f5d937bd545250f5ee5f35cf3b5 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Api/Api.csproj", "Api/"]
